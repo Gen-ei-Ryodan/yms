@@ -39,6 +39,32 @@ const AuthContext = createContext<AuthContextType | null>(null);
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 
 axios.defaults.baseURL = API_URL;
+axios.defaults.timeout = 15000; // 15 second timeout
+
+// Debug interceptor to trace requests
+axios.interceptors.request.use((config) => {
+  console.log(`[AXIOS] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, config.data);
+  return config;
+});
+
+axios.interceptors.response.use(
+  (response) => {
+    console.log(`[AXIOS] Response ${response.status}:`, response.data);
+    return response;
+  },
+  (error) => {
+    if (error.code === 'ECONNABORTED') {
+      console.error('[AXIOS] Request timed out:', error.message);
+    } else if (error.response) {
+      console.error(`[AXIOS] Error ${error.response.status}:`, error.response.data);
+    } else if (error.request) {
+      console.error('[AXIOS] No response received. Request was:', error.request);
+    } else {
+      console.error('[AXIOS] Error setting up request:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
 
 export function useAuth() {
   const context = useContext(AuthContext);

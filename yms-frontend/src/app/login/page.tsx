@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { Music2, Loader2 } from "lucide-react";
+import axios from "axios";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,11 +21,22 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    const result = await login(email, password);
-    if (!result.success) {
-      setError(result.error || "Login failed");
+    console.log("[LOGIN] Submitting login for:", email);
+    console.log("[LOGIN] API URL:", process.env.NEXT_PUBLIC_API_URL || "(not set, using default /api/v1)");
+    console.log("[LOGIN] axios baseURL:", (axios as any).defaults?.baseURL);
+
+    try {
+      const result = await login(email, password);
+      console.log("[LOGIN] Result:", result);
+      if (!result.success) {
+        setError(result.error || "Login failed");
+      }
+    } catch (err) {
+      console.error("[LOGIN] Unexpected error:", err);
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
