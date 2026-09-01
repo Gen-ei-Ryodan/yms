@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { Music2, Loader2 } from "lucide-react";
-import axios from "axios";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,24 +15,21 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    console.log("[LOGIN] Submitting login for:", email);
-    console.log("[LOGIN] API URL:", process.env.NEXT_PUBLIC_API_URL || "(not set, using default /api/v1)");
-    console.log("[LOGIN] axios baseURL:", (axios as any).defaults?.baseURL);
-
     try {
       const result = await login(email, password);
-      console.log("[LOGIN] Result:", result);
-      if (!result.success) {
+      if (result.success) {
+        router.push("/dashboard");
+      } else {
         setError(result.error || "Login failed");
       }
     } catch (err) {
-      console.error("[LOGIN] Unexpected error:", err);
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);
