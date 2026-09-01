@@ -1,14 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+import React from "react";
+
 interface StatCardProps {
   title: string;
   value: string | number;
-  icon: any;
+  icon: React.ComponentType<any>;
   color?: "blue" | "green" | "red" | "yellow" | "purple" | "orange";
 }
 
-export function StatCard({ title, value, icon, color = "blue" }: StatCardProps) {
+export function StatCard({ title, value, icon: Icon, color = "blue" }: StatCardProps) {
   const colorClasses: Record<string, string> = {
     blue: "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400",
     green: "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400",
@@ -27,7 +29,7 @@ export function StatCard({ title, value, icon, color = "blue" }: StatCardProps) 
             <p className="text-2xl font-bold mt-1">{value}</p>
           </div>
           <div className={cn("h-12 w-12 rounded-lg flex items-center justify-center", colorClasses[color])}>
-            {icon}
+            <Icon className="h-6 w-6" />
           </div>
         </div>
       </CardContent>
