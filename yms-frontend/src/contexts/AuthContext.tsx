@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import axios from "axios";
 
@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const mountedRef = useRef(false);
 
   const getToken = (): string | null => {
     if (typeof window === "undefined") return null;
@@ -79,17 +80,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(response.data.data);
       } else {
         localStorage.removeItem("yms_token");
+        delete axios.defaults.headers.common.Authorization;
         setUser(null);
         router.push("/login");
       }
     } catch (error) {
       localStorage.removeItem("yms_token");
+      delete axios.defaults.headers.common.Authorization;
       setUser(null);
       router.push("/login");
     } finally {
       setLoading(false);
     }
-  }, [router, pathname]);
+  }, [router]); // Removed pathname from deps to prevent re-firing on navigation
 
   const login = async (email: string, password: string) => {
     try {
@@ -118,8 +121,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/login");
   };
 
+  // Only run checkAuth once on mount
   useEffect(() => {
-    checkAuth();
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      checkAuth();
+    }
   }, [checkAuth]);
 
   return (

@@ -44,15 +44,17 @@ interface DashboardData {
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (authLoading || !user) return;
+
     const fetchDashboard = async () => {
       try {
-        const endpoint = user?.role === "teacher" ? "/dashboard/teacher"
-          : user?.role === "student" ? "/dashboard/student"
+        const endpoint = user.role === "teacher" ? "/dashboard/teacher"
+          : user.role === "student" ? "/dashboard/student"
           : "/dashboard/admin";
         const response = await axios.get(endpoint);
         setData(response.data.data);
@@ -63,7 +65,7 @@ export default function DashboardPage() {
       }
     };
     fetchDashboard();
-  }, [user?.role]);
+  }, [user, authLoading]);
 
   if (loading) {
     return (
