@@ -70,8 +70,11 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-64 bg-white/60 backdrop-blur-sm rounded-xl">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <p className="text-sm text-gray-600 font-medium">Loading dashboard...</p>
+          </div>
         </div>
       </MainLayout>
     );
@@ -82,8 +85,8 @@ export default function DashboardPage() {
       <MainLayout>
         <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p className="text-gray-500 dark:text-gray-400">Welcome back, {user?.name}!</p>
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600">Welcome back, {user?.name}!</p>
           </div>
           {user?.role === "teacher" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -110,8 +113,8 @@ export default function DashboardPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-gray-500 dark:text-gray-400">Overview of Yamaha Music School operations</p>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-600">Overview of Yamaha Music School operations</p>
         </div>
 
         {data && (

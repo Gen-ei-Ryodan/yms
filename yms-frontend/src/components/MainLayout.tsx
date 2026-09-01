@@ -13,8 +13,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="text-sm text-gray-600 font-medium">Loading...</p>
+        </div>
       </div>
     );
   }
@@ -22,11 +25,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const role = user?.role || "student";
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar role={role} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 lg:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200 bg-white px-4 lg:px-6">
           <Button
             variant="ghost"
             size="icon"
@@ -38,7 +41,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
           <div className="flex items-center gap-2 lg:hidden">
             <Music2 className="h-6 w-6 text-blue-600" />
-            <span className="font-bold">Yamaha</span>
+            <span className="font-bold text-gray-900">Yamaha</span>
           </div>
 
           <div className="flex-1" />
@@ -51,12 +54,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               </span>
             </Button>
             <div className="hidden sm:flex items-center gap-2 ml-2">
-              <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                <span className="text-xs font-bold text-blue-600">
                   {user?.name?.charAt(0) || "U"}
                 </span>
               </div>
-              <span className="text-sm font-medium hidden md:block">{user?.name}</span>
+              <span className="text-sm font-medium text-gray-900 hidden md:block">{user?.name}</span>
             </div>
           </div>
         </header>
