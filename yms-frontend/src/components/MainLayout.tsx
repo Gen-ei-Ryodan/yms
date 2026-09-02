@@ -29,37 +29,39 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <Sidebar role={role} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200 bg-white px-4 lg:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-100 bg-white/80 backdrop-blur-md px-4 lg:px-6">
           <Button
             variant="ghost"
             size="icon"
             className="lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-5 w-5 text-gray-700" />
           </Button>
 
           <div className="flex items-center gap-2 lg:hidden">
-            <Music2 className="h-6 w-6 text-blue-600" />
-            <span className="font-bold text-gray-900">Yamaha</span>
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+              <Music2 className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-bold text-gray-900 text-sm">Yamaha</span>
           </div>
 
           <div className="flex-1" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center">
+              <Bell className="h-5 w-5 text-gray-600" />
+              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-white">
                 3
               </span>
             </Button>
-            <div className="hidden sm:flex items-center gap-2 ml-2">
-              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-xs font-bold text-blue-600">
+            <div className="hidden sm:flex items-center gap-2.5 ml-1 pl-3 border-l border-gray-200">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+                <span className="text-xs font-bold text-white">
                   {user?.name?.charAt(0) || "U"}
                 </span>
               </div>
-              <span className="text-sm font-medium text-gray-900 hidden md:block">{user?.name}</span>
+              <span className="text-sm font-semibold text-gray-900 hidden md:block">{user?.name}</span>
             </div>
           </div>
         </header>

@@ -43,8 +43,8 @@ export default function MyClassesPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">My Classes</h1>
-          <p className="text-gray-500 dark:text-gray-400">Classes assigned to you</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Classes</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Classes assigned to you</p>
         </div>
 
         {classes.length === 0 ? (

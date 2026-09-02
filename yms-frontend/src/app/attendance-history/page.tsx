@@ -55,8 +55,8 @@ export default function AttendanceHistoryPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">Attendance History</h1>
-          <p className="text-gray-500 dark:text-gray-400">View attendance history</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Attendance History</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">View attendance history</p>
         </div>
 
         <div className="flex gap-4 flex-wrap">

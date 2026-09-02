@@ -50,8 +50,8 @@ export default function ProfilePage() {
     <MainLayout>
       <div className="space-y-6 max-w-2xl">
         <div>
-          <h1 className="text-2xl font-bold">My Profile</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage your profile information</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Profile</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your profile information</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">

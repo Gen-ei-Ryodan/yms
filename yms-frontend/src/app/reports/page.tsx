@@ -54,8 +54,8 @@ export default function ReportsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Reports</h1>
-            <p className="text-gray-500 dark:text-gray-400">View and export reports</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Reports</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">View and export reports</p>
           </div>
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" /> Export

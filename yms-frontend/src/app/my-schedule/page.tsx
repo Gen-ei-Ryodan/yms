@@ -43,8 +43,8 @@ export default function MySchedulePage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">My Schedule</h1>
-          <p className="text-gray-500 dark:text-gray-400">Your teaching schedule</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Schedule</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Your teaching schedule</p>
         </div>
 
         {schedules.length === 0 ? (

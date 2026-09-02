@@ -79,8 +79,8 @@ export default function LeavesPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Leave / Cuti</h1>
-            <p className="text-gray-500 dark:text-gray-400">Manage student leave requests</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Leave / Cuti</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage student leave requests</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Request Leave

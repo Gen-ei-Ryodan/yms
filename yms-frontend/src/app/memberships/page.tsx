@@ -66,8 +66,8 @@ export default function MembershipsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Student Membership</h1>
-            <p className="text-gray-500 dark:text-gray-400">Manage student memberships</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Student Membership</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage student memberships</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Membership
