@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor, formatDate } from "@/lib/utils";
+import { ClientNumber } from "@/components/ClientDate";
 
 export default function SubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
@@ -74,8 +75,8 @@ export default function SubscriptionsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Subscriptions</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage student subscriptions</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Subscriptions</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage student subscriptions</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Subscription
@@ -87,9 +88,9 @@ export default function SubscriptionsPage() {
             <Input placeholder="Search subscriptions..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Student</th>
                 <th className="text-left p-3 font-medium">Product</th>
@@ -102,12 +103,12 @@ export default function SubscriptionsPage() {
             </thead>
             <tbody>
               {subscriptions.map((s) => (
-                <tr key={s.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={s.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-medium">{s.student?.full_name}</td>
                   <td className="p-3 text-gray-500">{s.product?.name}</td>
                   <td className="p-3">{formatDate(s.start_date)}</td>
                   <td className="p-3">{formatDate(s.end_date)}</td>
-                  <td className="p-3">Rp {s.price?.toLocaleString("id-ID")}</td>
+                  <td className="p-3"><ClientNumber value={s.price} prefix="Rp " /></td>
                   <td className="p-3"><Badge className={getStatusColor(s.status)}>{s.status}</Badge></td>
                   <td className="p-3 text-right">
                     <Button variant="ghost" size="icon" onClick={() => { setSelectedSubscription(s); setShowPanel(true); }}><Eye className="h-4 w-4" /></Button>
@@ -131,7 +132,7 @@ export default function SubscriptionsPage() {
             <div className="grid grid-cols-2 gap-4">
               <div><p className="text-xs text-gray-500">Start Date</p><p className="font-medium">{formatDate(selectedSubscription.start_date)}</p></div>
               <div><p className="text-xs text-gray-500">End Date</p><p className="font-medium">{formatDate(selectedSubscription.end_date)}</p></div>
-              <div><p className="text-xs text-gray-500">Price</p><p className="font-medium">Rp {selectedSubscription.price?.toLocaleString("id-ID")}</p></div>
+              <div><p className="text-xs text-gray-500">Price</p><p className="font-medium"><ClientNumber value={selectedSubscription.price} prefix="Rp " /></p></div>
               <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedSubscription.status}</p></div>
             </div>
           </div>
@@ -144,7 +145,7 @@ export default function SubscriptionsPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Student</label>
               <select value={formData.student_id || ""} onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Student</option>
                 {students.map((s: any) => <option key={s.id} value={s.id}>{s.full_name} ({s.student_code})</option>)}
               </select>
@@ -152,9 +153,9 @@ export default function SubscriptionsPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Product</label>
               <select value={formData.product_id || ""} onChange={(e) => setFormData({ ...formData, product_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Product</option>
-                {products.map((p: any) => <option key={p.id} value={p.id}>{p.name} - Rp {p.price?.toLocaleString("id-ID")}</option>)}
+                {products.map((p: any) => <option key={p.id} value={p.id}>{p.name} - <ClientNumber value={p.price} prefix="Rp " /></option>)}
               </select>
             </div>
           </div>
@@ -176,7 +177,7 @@ export default function SubscriptionsPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Auto Renew</label>
               <select value={formData.auto_renew ? "true" : "false"} onChange={(e) => setFormData({ ...formData, auto_renew: e.target.value === "true" })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="false">No</option>
                 <option value="true">Yes</option>
               </select>

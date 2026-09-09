@@ -61,47 +61,47 @@ export function getRoleLabel(role: string): string {
 
 export function getRoleColor(role: string): string {
   const colors: Record<string, string> = {
-    super_admin: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-    admin: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
-    teacher: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-    student: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    parent: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+    super_admin: "bg-red-100 text-red-800",
+    admin: "bg-purple-100 text-purple-800",
+    teacher: "bg-blue-100 text-blue-800",
+    student: "bg-green-100 text-green-800",
+    parent: "bg-yellow-100 text-yellow-800",
   };
   return colors[role] || "bg-gray-100 text-gray-800";
 }
 
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    ACTIVE: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    INACTIVE: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
-    SUSPENDED: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-    GRADUATED: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-    TRANSFERRED: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300",
-    PENDING: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-    APPROVED: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    REJECTED: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-    CANCELLED: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
-    COMPLETED: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-    DROPPED: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-    ON_LEAVE: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-    PRESENT: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    LATE: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-    ABSENT: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-    EXCUSED: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-    PAID: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    UNPAID: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-    OVERDUE: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-    DRAFT: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
-    PARTIAL: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-    FULL: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
-    EXPIRED: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-    FULFILLED: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    USED: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-    AVAILABLE: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    MAINTENANCE: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-    LEAVE: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+    ACTIVE: "bg-green-100 text-green-800",
+    INACTIVE: "bg-gray-100 text-gray-800",
+    SUSPENDED: "bg-yellow-100 text-yellow-800",
+    GRADUATED: "bg-blue-100 text-blue-800",
+    TRANSFERRED: "bg-indigo-100 text-indigo-800",
+    PENDING: "bg-yellow-100 text-yellow-800",
+    APPROVED: "bg-green-100 text-green-800",
+    REJECTED: "bg-red-100 text-red-800",
+    CANCELLED: "bg-gray-100 text-gray-800",
+    COMPLETED: "bg-blue-100 text-blue-800",
+    DROPPED: "bg-red-100 text-red-800",
+    ON_LEAVE: "bg-orange-100 text-orange-800",
+    PRESENT: "bg-green-100 text-green-800",
+    LATE: "bg-yellow-100 text-yellow-800",
+    ABSENT: "bg-red-100 text-red-800",
+    EXCUSED: "bg-blue-100 text-blue-800",
+    PAID: "bg-green-100 text-green-800",
+    UNPAID: "bg-yellow-100 text-yellow-800",
+    OVERDUE: "bg-red-100 text-red-800",
+    DRAFT: "bg-gray-100 text-gray-800",
+    PARTIAL: "bg-orange-100 text-orange-800",
+    FULL: "bg-purple-100 text-purple-800",
+    EXPIRED: "bg-red-100 text-red-800",
+    FULFILLED: "bg-green-100 text-green-800",
+    USED: "bg-blue-100 text-blue-800",
+    AVAILABLE: "bg-green-100 text-green-800",
+    MAINTENANCE: "bg-orange-100 text-orange-800",
+    LEAVE: "bg-purple-100 text-purple-800",
   };
-  return colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+  return colors[status] || "bg-gray-100 text-gray-800";
 }
 
 export function truncate(text: string, length: number = 50): string {

@@ -67,8 +67,8 @@ export default function AttendancePage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Student Attendance</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">QR/Barcode check-in system</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Student Attendance</h1>
+            <p className="text-sm text-gray-500  mt-1">QR/Barcode check-in system</p>
           </div>
           <Button onClick={() => setShowQR(true)}>
             <Camera className="h-4 w-4 mr-2" /> QR Check-in
@@ -82,9 +82,9 @@ export default function AttendancePage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Date</th>
                 <th className="text-left p-3 font-medium">Student</th>
@@ -97,7 +97,7 @@ export default function AttendancePage() {
             </thead>
             <tbody>
               {attendances.map((a) => (
-                <tr key={a.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={a.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3">{a.attendance_date}</td>
                   <td className="p-3 font-medium">{a.student?.full_name}</td>
                   <td className="p-3">{a.class?.course?.name}</td>
@@ -116,7 +116,7 @@ export default function AttendancePage() {
 
       <SlidePanel open={showQR} onClose={() => setShowQR(false)} title="QR Check-in" size="md">
         <div className="space-y-4">
-          <div className="flex flex-col items-center justify-center p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div className="flex flex-col items-center justify-center p-6 bg-gray-50 rounded-lg">
             <QrCode className="h-32 w-32 text-gray-400 mb-4" />
             <p className="text-sm text-gray-500 text-center">Scan QR code or enter student code manually</p>
           </div>
@@ -127,7 +127,7 @@ export default function AttendancePage() {
           <div>
             <label className="block text-sm font-medium mb-1">Schedule</label>
             <select value={scheduleId} onChange={(e) => setScheduleId(e.target.value)}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="">Select Schedule</option>
               {schedules.map((s: any) => <option key={s.id} value={s.id}>{s.class?.course?.name} - {s.day_of_week} {s.start_time}</option>)}
             </select>

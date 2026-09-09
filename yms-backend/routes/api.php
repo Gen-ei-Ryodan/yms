@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\LoyaltyController;
 use App\Http\Controllers\Api\LoyaltyRuleController;
 use App\Http\Controllers\Api\LoyaltyTierController;
+use App\Http\Controllers\Api\MembershipController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RewardController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\TuitionProductController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +39,11 @@ Route::prefix('v1')->group(function () {
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
     Route::put('/profile', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
 
+    // Users (admin)
+    Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');
+    Route::put('/users/{user}', [UserController::class, 'update'])->middleware('auth:sanctum');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware('auth:sanctum');
+
     // Students
     Route::apiResource('students', StudentController::class)->middleware('auth:sanctum');
 
@@ -44,6 +51,9 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('guardians', GuardianController::class)->middleware('auth:sanctum');
     Route::post('/guardians/{guardian}/attach-student', [GuardianController::class, 'attachStudent'])->middleware('auth:sanctum');
     Route::delete('/guardians/{guardian}/detach-student/{student}', [GuardianController::class, 'detachStudent'])->middleware('auth:sanctum');
+
+    // Memberships
+    Route::apiResource('memberships', MembershipController::class)->middleware('auth:sanctum');
 
     // Teachers
     Route::apiResource('teachers', TeacherController::class)->middleware('auth:sanctum');

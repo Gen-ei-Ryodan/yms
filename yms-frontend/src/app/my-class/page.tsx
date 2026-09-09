@@ -45,18 +45,18 @@ export default function MyClassPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Class</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Your current class information</p>
+          <h1 className="text-2xl font-bold text-gray-900 ">My Class</h1>
+          <p className="text-sm text-gray-500  mt-1">Your current class information</p>
         </div>
 
         {enrollment ? (
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+          <div className="bg-white  rounded-lg border border-gray-200 p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <h3 className="text-xl font-bold">{enrollment.class?.course?.name}</h3>
                 <p className="text-gray-500">{enrollment.class?.class_code} · {enrollment.class?.level?.name}</p>
               </div>
-              <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Active</Badge>
+              <Badge className="bg-green-100 text-green-800  ">Active</Badge>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ export default function MyClassPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
+          <div className="bg-white  rounded-lg border border-gray-200 p-8 text-center">
             <GraduationCap className="h-12 w-12 mx-auto text-gray-400 mb-2" />
             <p className="text-gray-500">No active class enrollment</p>
           </div>

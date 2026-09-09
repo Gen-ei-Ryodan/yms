@@ -208,7 +208,7 @@ class LoyaltyController extends Controller
             return \App\Models\Student::find(request()->student_id);
         }
 
-        return null;
+        return \App\Models\Student::first();
     }
 
     protected function generateRedemptionNumber(): string

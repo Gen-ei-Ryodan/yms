@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/lib/utils";
+import { ClientNumber } from "@/components/ClientDate";
 
 export default function TuitionPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -66,8 +67,8 @@ export default function TuitionPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Tuition Products</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage tuition and billing products</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Tuition Products</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage tuition and billing products</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Product
@@ -79,9 +80,9 @@ export default function TuitionPage() {
             <Input placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Name</th>
                 <th className="text-left p-3 font-medium">Course</th>
@@ -94,11 +95,11 @@ export default function TuitionPage() {
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={p.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-medium">{p.name}</td>
                   <td className="p-3 text-gray-500">{p.course?.name}</td>
                   <td className="p-3">{p.billing_type}</td>
-                  <td className="p-3">Rp {p.price?.toLocaleString("id-ID")}</td>
+                  <td className="p-3"><ClientNumber value={p.price} prefix="Rp " /></td>
                   <td className="p-3">{p.duration} days</td>
                   <td className="p-3"><Badge className={getStatusColor(p.status)}>{p.status}</Badge></td>
                   <td className="p-3 text-right">
@@ -121,7 +122,7 @@ export default function TuitionPage() {
               <p className="text-gray-500">{selectedProduct.course?.name}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div><p className="text-xs text-gray-500">Price</p><p className="font-medium">Rp {selectedProduct.price?.toLocaleString("id-ID")}</p></div>
+              <div><p className="text-xs text-gray-500">Price</p><p className="font-medium"><ClientNumber value={selectedProduct.price} prefix="Rp " /></p></div>
               <div><p className="text-xs text-gray-500">Billing Type</p><p className="font-medium">{selectedProduct.billing_type}</p></div>
               <div><p className="text-xs text-gray-500">Duration</p><p className="font-medium">{selectedProduct.duration} days</p></div>
               <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedProduct.status}</p></div>
@@ -136,7 +137,7 @@ export default function TuitionPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Course</label>
               <select value={formData.course_id || ""} onChange={(e) => setFormData({ ...formData, course_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Course</option>
                 {courses.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
@@ -154,7 +155,7 @@ export default function TuitionPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Billing Type</label>
               <select value={formData.billing_type || "MONTHLY"} onChange={(e) => setFormData({ ...formData, billing_type: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="MONTHLY">MONTHLY</option>
                 <option value="PACKAGE">PACKAGE</option>
                 <option value="TERM">TERM</option>
@@ -169,7 +170,7 @@ export default function TuitionPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Status</label>
             <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
             </select>

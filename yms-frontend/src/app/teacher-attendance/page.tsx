@@ -67,8 +67,8 @@ export default function TeacherAttendancePage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Teacher Attendance</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage teacher attendance</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Teacher Attendance</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage teacher attendance</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Record Attendance
@@ -80,9 +80,9 @@ export default function TeacherAttendancePage() {
             <Input placeholder="Search attendance..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Teacher</th>
                 <th className="text-left p-3 font-medium">Date</th>
@@ -93,7 +93,7 @@ export default function TeacherAttendancePage() {
             </thead>
             <tbody>
               {attendances.map((a) => (
-                <tr key={a.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={a.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-medium">{a.teacher?.name}</td>
                   <td className="p-3">{a.date}</td>
                   <td className="p-3">{a.check_in || "N/A"}</td>
@@ -132,7 +132,7 @@ export default function TeacherAttendancePage() {
           <div>
             <label className="block text-sm font-medium mb-1">Teacher</label>
             <select value={formData.teacher_id || ""} onChange={(e) => setFormData({ ...formData, teacher_id: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="">Select Teacher</option>
               {teachers.map((t: any) => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
@@ -145,7 +145,7 @@ export default function TeacherAttendancePage() {
             <div>
               <label className="block text-sm font-medium mb-1">Status</label>
               <select value={formData.status || "PRESENT"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="PRESENT">PRESENT</option>
                 <option value="LATE">LATE</option>
                 <option value="ABSENT">ABSENT</option>

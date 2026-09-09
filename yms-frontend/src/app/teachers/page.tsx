@@ -70,8 +70,8 @@ export default function TeachersPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Teacher Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage all teachers</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Teacher Management</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage all teachers</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Teacher
@@ -87,9 +87,9 @@ export default function TeachersPage() {
           <Button variant="outline"><Download className="h-4 w-4 mr-2" /> Export</Button>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Teacher</th>
                 <th className="text-left p-3 font-medium">Code</th>
@@ -100,11 +100,11 @@ export default function TeachersPage() {
             </thead>
             <tbody>
               {teachers.map((teacher) => (
-                <tr key={teacher.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={teacher.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                        <span className="text-sm font-bold text-green-600 dark:text-green-400">
+                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <span className="text-sm font-bold text-blue-600">
                           {teacher.name?.charAt(0)}
                         </span>
                       </div>
@@ -133,8 +133,8 @@ export default function TeachersPage() {
         {selectedTeacher && (
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                <span className="text-2xl font-bold text-green-600 dark:text-green-400">{selectedTeacher.name?.charAt(0)}</span>
+              <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center">
+                <span className="text-2xl font-bold text-blue-600">{selectedTeacher.name?.charAt(0)}</span>
               </div>
               <div>
                 <h3 className="text-xl font-bold">{selectedTeacher.name}</h3>
@@ -181,7 +181,7 @@ export default function TeachersPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Status</label>
               <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="ACTIVE">ACTIVE</option>
                 <option value="INACTIVE">INACTIVE</option>
               </select>

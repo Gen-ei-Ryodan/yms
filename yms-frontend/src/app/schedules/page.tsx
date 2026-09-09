@@ -66,8 +66,8 @@ export default function SchedulesPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Schedule Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage class schedules</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Schedule Management</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage class schedules</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Schedule
@@ -79,9 +79,9 @@ export default function SchedulesPage() {
             <Input placeholder="Search schedules..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Day</th>
                 <th className="text-left p-3 font-medium">Time</th>
@@ -94,7 +94,7 @@ export default function SchedulesPage() {
             </thead>
             <tbody>
               {schedules.map((s) => (
-                <tr key={s.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={s.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3">{s.day_of_week}</td>
                   <td className="p-3"><Clock className="inline h-3 w-3 mr-1" />{s.start_time} - {s.end_time}</td>
                   <td className="p-3 font-medium">{s.class?.course?.name}</td>
@@ -135,7 +135,7 @@ export default function SchedulesPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Class</label>
               <select value={formData.class_id || ""} onChange={(e) => setFormData({ ...formData, class_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Class</option>
                 {classes.map((c: any) => <option key={c.id} value={c.id}>{c.course?.name} - {c.level?.name}</option>)}
               </select>
@@ -143,7 +143,7 @@ export default function SchedulesPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Day of Week</label>
               <select value={formData.day_of_week || ""} onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 {["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"].map(d => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
@@ -161,7 +161,7 @@ export default function SchedulesPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Status</label>
             <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
             </select>

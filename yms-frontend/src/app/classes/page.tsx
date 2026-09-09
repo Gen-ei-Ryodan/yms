@@ -76,8 +76,8 @@ export default function ClassesPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Class Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage all classes</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Class Management</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage all classes</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Class
@@ -89,9 +89,9 @@ export default function ClassesPage() {
             <Input placeholder="Search classes..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Code</th>
                 <th className="text-left p-3 font-medium">Course</th>
@@ -105,7 +105,7 @@ export default function ClassesPage() {
             </thead>
             <tbody>
               {classes.map((cls) => (
-                <tr key={cls.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={cls.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-mono text-xs">{cls.class_code}</td>
                   <td className="p-3 font-medium">{cls.course?.name}</td>
                   <td className="p-3">{cls.level?.name}</td>
@@ -155,7 +155,7 @@ export default function ClassesPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Course</label>
               <select value={formData.course_id || ""} onChange={(e) => setFormData({ ...formData, course_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Course</option>
                 {courses.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
@@ -163,7 +163,7 @@ export default function ClassesPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Level</label>
               <select value={formData.level_id || ""} onChange={(e) => setFormData({ ...formData, level_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Level</option>
                 <option value="1">Beginner</option>
                 <option value="2">Basic</option>
@@ -176,7 +176,7 @@ export default function ClassesPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Teacher</label>
               <select value={formData.teacher_id || ""} onChange={(e) => setFormData({ ...formData, teacher_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Teacher</option>
                 {teachers.map((t: any) => <option key={t.id} value={t.id}>{t.name}</option>)}
               </select>
@@ -184,7 +184,7 @@ export default function ClassesPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Room</label>
               <select value={formData.room_id || ""} onChange={(e) => setFormData({ ...formData, room_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Room</option>
                 {rooms.map((r: any) => <option key={r.id} value={r.id}>{r.name}</option>)}
               </select>
@@ -198,7 +198,7 @@ export default function ClassesPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Status</label>
               <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="ACTIVE">ACTIVE</option>
                 <option value="INACTIVE">INACTIVE</option>
                 <option value="FULL">FULL</option>

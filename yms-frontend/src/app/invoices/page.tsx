@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor, formatDate } from "@/lib/utils";
+import { ClientNumber } from "@/components/ClientDate";
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<any[]>([]);
@@ -66,8 +67,8 @@ export default function InvoicesPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Invoices</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage invoices</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Invoices</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage invoices</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Create Invoice
@@ -79,9 +80,9 @@ export default function InvoicesPage() {
             <Input placeholder="Search invoices..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Invoice #</th>
                 <th className="text-left p-3 font-medium">Student</th>
@@ -94,12 +95,12 @@ export default function InvoicesPage() {
             </thead>
             <tbody>
               {invoices.map((inv) => (
-                <tr key={inv.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={inv.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-mono text-xs">{inv.invoice_number}</td>
                   <td className="p-3 font-medium">{inv.student?.full_name}</td>
                   <td className="p-3">{formatDate(inv.issue_date)}</td>
                   <td className="p-3">{formatDate(inv.due_date)}</td>
-                  <td className="p-3">Rp {inv.total?.toLocaleString("id-ID")}</td>
+                  <td className="p-3"><ClientNumber value={inv.total} prefix="Rp " /></td>
                   <td className="p-3"><Badge className={getStatusColor(inv.status)}>{inv.status}</Badge></td>
                   <td className="p-3 text-right">
                     <Button variant="ghost" size="icon" onClick={() => { setSelectedInvoice(inv); setShowPanel(true); }}><Eye className="h-4 w-4" /></Button>
@@ -123,8 +124,8 @@ export default function InvoicesPage() {
             <div className="grid grid-cols-2 gap-4">
               <div><p className="text-xs text-gray-500">Issue Date</p><p className="font-medium">{formatDate(selectedInvoice.issue_date)}</p></div>
               <div><p className="text-xs text-gray-500">Due Date</p><p className="font-medium">{formatDate(selectedInvoice.due_date)}</p></div>
-              <div><p className="text-xs text-gray-500">Subtotal</p><p className="font-medium">Rp {selectedInvoice.subtotal?.toLocaleString("id-ID")}</p></div>
-              <div><p className="text-xs text-gray-500">Total</p><p className="font-medium">Rp {selectedInvoice.total?.toLocaleString("id-ID")}</p></div>
+              <div><p className="text-xs text-gray-500">Subtotal</p><p className="font-medium"><ClientNumber value={selectedInvoice.subtotal} prefix="Rp " /></p></div>
+              <div><p className="text-xs text-gray-500">Total</p><p className="font-medium"><ClientNumber value={selectedInvoice.total} prefix="Rp " /></p></div>
               <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedInvoice.status}</p></div>
             </div>
           </div>
@@ -136,7 +137,7 @@ export default function InvoicesPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Student</label>
             <select value={formData.student_id || ""} onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="">Select Student</option>
               {students.map((s: any) => <option key={s.id} value={s.id}>{s.full_name} ({s.student_code})</option>)}
             </select>

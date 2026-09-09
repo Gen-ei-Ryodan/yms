@@ -43,19 +43,19 @@ export default function MySchedulePage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Schedule</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Your teaching schedule</p>
+          <h1 className="text-2xl font-bold text-gray-900 ">My Schedule</h1>
+          <p className="text-sm text-gray-500  mt-1">Your teaching schedule</p>
         </div>
 
         {schedules.length === 0 ? (
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
+          <div className="bg-white  rounded-lg border border-gray-200 p-8 text-center">
             <Calendar className="h-12 w-12 mx-auto text-gray-400 mb-2" />
             <p className="text-gray-500">No schedules found</p>
           </div>
         ) : (
           <div className="space-y-3">
             {schedules.map((s) => (
-              <div key={s.id} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 flex items-center gap-4">
+              <div key={s.id} className="bg-white  rounded-lg border border-gray-200 p-4 flex items-center gap-4">
                 <div className="text-center min-w-[80px]">
                   <p className="text-xs text-gray-500">{s.day_of_week.slice(0, 3)}</p>
                 </div>
@@ -66,7 +66,7 @@ export default function MySchedulePage() {
                     <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{s.room?.name}</span>
                   </div>
                 </div>
-                <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">{s.status}</Badge>
+                <Badge className="bg-blue-100 text-blue-800  ">{s.status}</Badge>
               </div>
             ))}
           </div>

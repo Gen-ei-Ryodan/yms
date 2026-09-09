@@ -8,6 +8,7 @@ import axios from "axios";
 import { Loader2, Plus, Search, Edit, Trash2, Eye, Bell, CheckCheck, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ClientDate } from "@/components/ClientDate";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -43,8 +44,8 @@ export default function NotificationsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Notifications</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">View and manage notifications</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Notifications</h1>
+            <p className="text-sm text-gray-500  mt-1">View and manage notifications</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={async () => {
@@ -63,22 +64,22 @@ export default function NotificationsPage() {
         </div>
 
         {notifications.length === 0 ? (
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
+          <div className="bg-white  rounded-lg border border-gray-200 p-8 text-center">
             <Bell className="h-12 w-12 mx-auto text-gray-400 mb-2" />
             <p className="text-gray-500">No notifications</p>
           </div>
         ) : (
           <div className="space-y-2">
             {notifications.map((n) => (
-              <div key={n.id} className={cn("bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 flex items-start gap-3",
+              <div key={n.id} className={cn("bg-white  rounded-lg border border-gray-200 p-4 flex items-start gap-3",
                 !n.read_at && "border-l-4 border-l-blue-600"
               )}>
                 <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                 <div className="flex-1">
                   <p className="font-medium">{n.data?.message || n.type}</p>
-                  <p className="text-sm text-gray-500">{new Date(n.created_at).toLocaleString("id-ID")}</p>
+                  <p className="text-sm text-gray-500"><ClientDate date={n.created_at} /></p>
                 </div>
-                {!n.read_at && <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">New</Badge>}
+                {!n.read_at && <Badge className="bg-blue-100 text-blue-800  ">New</Badge>}
               </div>
             ))}
           </div>

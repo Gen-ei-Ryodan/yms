@@ -33,8 +33,10 @@ import {
   CalendarDays,
   FileText,
   Bell,
+  LogOut,
 } from "lucide-react";
 import React from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface SidebarProps {
   role: string;
@@ -120,6 +122,7 @@ const menuItems: Record<string, { label: string; href: string; icon: React.Compo
 export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
   const items = menuItems[role] || menuItems.student;
   const pathname = usePathname();
+  const { user, logout } = useAuth();
 
   return (
     <>
@@ -180,15 +183,22 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
         <div className="p-4 border-t border-gray-100">
           <a href="/profile" className="flex items-center gap-3 rounded-lg p-2 hover:bg-gray-50 transition-colors">
             <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
-              <span className="text-sm font-bold text-white">U</span>
+              <span className="text-sm font-bold text-white">{user?.name?.charAt(0) || "U"}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">User</p>
+              <p className="text-sm font-semibold text-gray-900 truncate">{user?.name || "User"}</p>
               <p className="text-[11px] text-gray-500 capitalize font-medium">
                 {role.replace("_", " ")}
               </p>
             </div>
           </a>
+          <button
+            onClick={logout}
+            className="flex items-center gap-3 w-full rounded-lg p-2 mt-1 text-red-600 hover:bg-red-50 transition-colors text-sm font-medium"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
         </div>
       </aside>
     </>

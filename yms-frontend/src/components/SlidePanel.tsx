@@ -1,12 +1,8 @@
 "use client";
 
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
@@ -26,27 +22,41 @@ export function SlidePanel({ open, onClose, title, children, size = "md" }: Slid
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent
-        className={cn(
-          "fixed right-0 top-0 h-full translate-x-full data-[state=open]:translate-x-0 transition-transform duration-300 ease-in-out p-0 gap-0",
-          sizeClasses[size],
-          "w-[90vw]"
-        )}
-        onPointerDownOutside={(e) => e.preventDefault()}
-      >
-        <div className="flex flex-col h-full">
-          <DialogHeader className="flex flex-row items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-            <DialogTitle className="text-lg font-semibold">{title}</DialogTitle>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-5 w-5" />
-            </Button>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto p-4">
+    <DialogPrimitive.Root open={open} onOpenChange={onClose}>
+      <DialogPrimitive.Portal>
+        {/* Backdrop */}
+        <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 data-[state=open]:opacity-100 data-[state=closed]:opacity-0" />
+
+        {/* Panel */}
+        <DialogPrimitive.Content
+          className={cn(
+            "fixed right-0 top-0 bottom-0 z-50 flex flex-col",
+            "w-full bg-white shadow-2xl outline-none",
+            sizeClasses[size],
+            // Animation: hidden by default, slide in when open
+            "translate-x-full opacity-0",
+            "data-[state=open]:translate-x-0 data-[state=open]:opacity-100",
+            "data-[state=closed]:translate-x-full data-[state=closed]:opacity-0",
+            "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          )}
+          onPointerDownOutside={(e) => e.preventDefault()}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <DialogPrimitive.Title className="text-lg font-semibold">{title}</DialogPrimitive.Title>
+            <DialogPrimitive.Close asChild>
+              <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full transition-colors">
+                <X className="h-5 w-5" />
+              </Button>
+            </DialogPrimitive.Close>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-5">
             {children}
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }

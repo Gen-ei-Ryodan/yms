@@ -63,8 +63,8 @@ export default function RewardsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Rewards</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage reward catalog</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Rewards</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage reward catalog</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Reward
@@ -78,7 +78,7 @@ export default function RewardsPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {rewards.map((r) => (
-            <div key={r.id} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div key={r.id} className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
               <div className="h-32 bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
                 <Gift className="h-12 w-12 text-white" />
               </div>
@@ -86,7 +86,7 @@ export default function RewardsPage() {
                 <h3 className="font-bold">{r.name}</h3>
                 <p className="text-sm text-gray-500">{r.code}</p>
                 <div className="flex items-center justify-between mt-3">
-                  <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">{r.points_required} pts</Badge>
+                  <Badge className="bg-yellow-100 text-yellow-800  ">{r.points_required} pts</Badge>
                   <Badge className={getStatusColor(r.status)}>{r.status}</Badge>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">Stock: {r.stock}</p>
@@ -143,7 +143,7 @@ export default function RewardsPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Status</label>
             <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
             </select>

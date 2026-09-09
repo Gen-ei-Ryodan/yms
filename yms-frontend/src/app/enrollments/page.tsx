@@ -67,8 +67,8 @@ export default function EnrollmentsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Class Enrollment</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage student enrollments</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Class Enrollment</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage student enrollments</p>
           </div>
           <Button onClick={() => setShowForm(true)}>
             <UserPlus className="h-4 w-4 mr-2" /> Enroll Student
@@ -80,9 +80,9 @@ export default function EnrollmentsPage() {
             <Input placeholder="Search enrollments..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Student</th>
                 <th className="text-left p-3 font-medium">Class</th>
@@ -94,7 +94,7 @@ export default function EnrollmentsPage() {
             </thead>
             <tbody>
               {enrollments.map((e) => (
-                <tr key={e.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={e.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-medium">{e.student?.full_name}</td>
                   <td className="p-3">{e.class?.class_code}</td>
                   <td className="p-3 text-gray-500">{e.class?.course?.name}</td>
@@ -117,7 +117,7 @@ export default function EnrollmentsPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Student</label>
             <select value={formData.student_id || ""} onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="">Select Student</option>
               {students.map((s: any) => <option key={s.id} value={s.id}>{s.full_name} ({s.student_code})</option>)}
             </select>
@@ -125,7 +125,7 @@ export default function EnrollmentsPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Class</label>
             <select value={formData.class_id || ""} onChange={(e) => setFormData({ ...formData, class_id: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="">Select Class</option>
               {classes.map((c: any) => <option key={c.id} value={c.id}>{c.course?.name} - {c.level?.name} ({c.class_code})</option>)}
             </select>

@@ -50,14 +50,14 @@ export default function ProfilePage() {
     <MainLayout>
       <div className="space-y-6 max-w-2xl">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Profile</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your profile information</p>
+          <h1 className="text-2xl font-bold text-gray-900 ">My Profile</h1>
+          <p className="text-sm text-gray-500  mt-1">Manage your profile information</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+        <div className="bg-white  rounded-lg border border-gray-200 p-6">
           <div className="flex items-center gap-4 mb-6">
-            <div className="h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-              <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="h-20 w-20 rounded-full bg-blue-100  flex items-center justify-center">
+              <span className="text-3xl font-bold text-blue-600 ">
                 {user?.name?.charAt(0) || "U"}
               </span>
             </div>

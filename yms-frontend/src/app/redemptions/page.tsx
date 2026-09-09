@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/lib/utils";
+import { ClientDate } from "@/components/ClientDate";
 
 export default function RedemptionsPage() {
   const [redemptions, setRedemptions] = useState<any[]>([]);
@@ -75,8 +76,8 @@ export default function RedemptionsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Reward Redemptions</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage reward redemptions</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Reward Redemptions</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage reward redemptions</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Redeem Reward
@@ -88,9 +89,9 @@ export default function RedemptionsPage() {
             <Input placeholder="Search redemptions..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Redemption #</th>
                 <th className="text-left p-3 font-medium">Student</th>
@@ -102,7 +103,7 @@ export default function RedemptionsPage() {
             </thead>
             <tbody>
               {redemptions.map((r) => (
-                <tr key={r.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={r.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-mono text-xs">{r.redemption_number}</td>
                   <td className="p-3 font-medium">{r.student?.full_name}</td>
                   <td className="p-3 text-gray-500">{r.reward?.name}</td>
@@ -138,7 +139,7 @@ export default function RedemptionsPage() {
               <div><p className="text-xs text-gray-500">Reward</p><p className="font-medium">{selectedRedemption.reward?.name}</p></div>
               <div><p className="text-xs text-gray-500">Points Used</p><p className="font-medium">{selectedRedemption.points_used}</p></div>
               <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedRedemption.status}</p></div>
-              <div><p className="text-xs text-gray-500">Redeemed</p><p className="font-medium">{new Date(selectedRedemption.redeemed_at).toLocaleString("id-ID")}</p></div>
+              <div><p className="text-xs text-gray-500">Redeemed</p><p className="font-medium"><ClientDate date={selectedRedemption.redeemed_at} /></p></div>
             </div>
           </div>
         )}
@@ -149,7 +150,7 @@ export default function RedemptionsPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Student</label>
             <select value={formData.student_id || ""} onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="">Select Student</option>
               {students.map((s: any) => <option key={s.id} value={s.id}>{s.full_name} ({s.student_code})</option>)}
             </select>
@@ -157,7 +158,7 @@ export default function RedemptionsPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Reward</label>
             <select value={formData.reward_id || ""} onChange={(e) => setFormData({ ...formData, reward_id: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="">Select Reward</option>
               {rewards.map((r: any) => <option key={r.id} value={r.id}>{r.name} ({r.points_required} pts)</option>)}
             </select>

@@ -61,8 +61,8 @@ export default function LevelsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Level Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage learning levels</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Level Management</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage learning levels</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Level
@@ -74,9 +74,9 @@ export default function LevelsPage() {
             <Input placeholder="Search levels..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Sequence</th>
                 <th className="text-left p-3 font-medium">Code</th>
@@ -87,7 +87,7 @@ export default function LevelsPage() {
             </thead>
             <tbody>
               {levels.map((level) => (
-                <tr key={level.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={level.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3"><ArrowUp className="h-4 w-4 text-gray-400" /></td>
                   <td className="p-3 font-mono text-xs">{level.code}</td>
                   <td className="p-3 font-medium">{level.name}</td>

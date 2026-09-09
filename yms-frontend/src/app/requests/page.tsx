@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/lib/utils";
+import { ClientDate } from "@/components/ClientDate";
 
 export default function RequestsPage() {
   const [transfers, setTransfers] = useState<any[]>([]);
@@ -61,11 +62,11 @@ export default function RequestsPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Requests</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your requests</p>
+          <h1 className="text-2xl font-bold text-gray-900 ">Requests</h1>
+          <p className="text-sm text-gray-500  mt-1">Manage your requests</p>
         </div>
 
-        <div className="flex gap-2 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex gap-2 border-b border-gray-200">
           <button onClick={() => setTab("transfers")}
             className={cn("px-4 py-2 text-sm font-medium border-b-2 -mb-px",
               tab === "transfers" ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-700"
@@ -81,9 +82,9 @@ export default function RequestsPage() {
         </div>
 
         {tab === "transfers" && (
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-gray-800">
+              <thead className="bg-gray-200">
                 <tr>
                   <th className="text-left p-3 font-medium">Student</th>
                   <th className="text-left p-3 font-medium">From</th>
@@ -95,7 +96,7 @@ export default function RequestsPage() {
               </thead>
               <tbody>
                 {transfers.map((t) => (
-                  <tr key={t.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                  <tr key={t.id} className="border-t border-gray-200 hover:bg-gray-100">
                     <td className="p-3 font-medium">{t.student?.full_name}</td>
                     <td className="p-3 text-gray-500">{t.fromClass?.course?.name}</td>
                     <td className="p-3 text-gray-500">{t.toClass?.course?.name}</td>
@@ -115,9 +116,9 @@ export default function RequestsPage() {
         )}
 
         {tab === "leaves" && (
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-gray-800">
+              <thead className="bg-gray-200">
                 <tr>
                   <th className="text-left p-3 font-medium">Student</th>
                   <th className="text-left p-3 font-medium">Start Date</th>
@@ -129,7 +130,7 @@ export default function RequestsPage() {
               </thead>
               <tbody>
                 {leaves.map((l) => (
-                  <tr key={l.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                  <tr key={l.id} className="border-t border-gray-200 hover:bg-gray-100">
                     <td className="p-3 font-medium">{l.student?.full_name}</td>
                     <td className="p-3">{l.start_date}</td>
                     <td className="p-3">{l.end_date}</td>
@@ -162,7 +163,7 @@ export default function RequestsPage() {
                   <div><p className="text-xs text-gray-500">From Class</p><p className="font-medium">{selectedItem.fromClass?.course?.name} - {selectedItem.fromClass?.level?.name}</p></div>
                   <div><p className="text-xs text-gray-500">To Class</p><p className="font-medium">{selectedItem.toClass?.course?.name} - {selectedItem.toClass?.level?.name}</p></div>
                   <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedItem.status}</p></div>
-                  <div><p className="text-xs text-gray-500">Requested</p><p className="font-medium">{new Date(selectedItem.requested_at).toLocaleString("id-ID")}</p></div>
+                  <div><p className="text-xs text-gray-500">Requested</p><p className="font-medium"><ClientDate date={selectedItem.requested_at} /></p></div>
                 </div>
                 <div><p className="text-xs text-gray-500">Reason</p><p className="font-medium">{selectedItem.reason}</p></div>
               </>

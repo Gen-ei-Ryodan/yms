@@ -52,17 +52,17 @@ class ClassModel extends Model
 
     public function schedules()
     {
-        return $this->hasMany(ClassSchedule::class);
+        return $this->hasMany(ClassSchedule::class, 'class_id');
     }
 
     public function enrollments()
     {
-        return $this->hasMany(ClassEnrollment::class);
+        return $this->hasMany(ClassEnrollment::class, 'class_id');
     }
 
     public function attendances()
     {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(Attendance::class, 'class_id');
     }
 
     public function scopeActive($query)

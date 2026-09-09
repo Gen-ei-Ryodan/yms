@@ -43,25 +43,25 @@ export default function MyClassesPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Classes</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Classes assigned to you</p>
+          <h1 className="text-2xl font-bold text-gray-900 ">My Classes</h1>
+          <p className="text-sm text-gray-500  mt-1">Classes assigned to you</p>
         </div>
 
         {classes.length === 0 ? (
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 text-center">
+          <div className="bg-white  rounded-lg border border-gray-200 p-8 text-center">
             <GraduationCap className="h-12 w-12 mx-auto text-gray-400 mb-2" />
             <p className="text-gray-500">No classes assigned</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {classes.map((c) => (
-              <div key={c.id} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4">
+              <div key={c.id} className="bg-white  rounded-lg border border-gray-200 p-4">
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-bold">{c.course?.name}</h3>
                     <p className="text-sm text-gray-500">{c.class_code} · {c.level?.name}</p>
                   </div>
-                  <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">{c.status}</Badge>
+                  <Badge className="bg-blue-100 text-blue-800  ">{c.status}</Badge>
                 </div>
                 <div className="mt-3 space-y-1 text-sm text-gray-500">
                   <p className="flex items-center gap-1"><MapPin className="h-3 w-3" />{c.room?.name} (Cap: {c.capacity})</p>

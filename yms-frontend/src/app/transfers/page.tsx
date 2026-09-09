@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/lib/utils";
+import { ClientDate } from "@/components/ClientDate";
 
 export default function TransfersPage() {
   const [transfers, setTransfers] = useState<any[]>([]);
@@ -73,8 +74,8 @@ export default function TransfersPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Class Transfer</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage class transfer requests</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Class Transfer</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage class transfer requests</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Request Transfer
@@ -86,9 +87,9 @@ export default function TransfersPage() {
             <Input placeholder="Search transfers..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Student</th>
                 <th className="text-left p-3 font-medium">From</th>
@@ -100,7 +101,7 @@ export default function TransfersPage() {
             </thead>
             <tbody>
               {transfers.map((t) => (
-                <tr key={t.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={t.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-medium">{t.student?.full_name}</td>
                   <td className="p-3 text-gray-500">{t.fromClass?.course?.name}</td>
                   <td className="p-3 text-gray-500">{t.toClass?.course?.name}</td>
@@ -133,7 +134,7 @@ export default function TransfersPage() {
               <div><p className="text-xs text-gray-500">From Class</p><p className="font-medium">{selectedTransfer.fromClass?.course?.name} - {selectedTransfer.fromClass?.level?.name}</p></div>
               <div><p className="text-xs text-gray-500">To Class</p><p className="font-medium">{selectedTransfer.toClass?.course?.name} - {selectedTransfer.toClass?.level?.name}</p></div>
               <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedTransfer.status}</p></div>
-              <div><p className="text-xs text-gray-500">Requested</p><p className="font-medium">{new Date(selectedTransfer.requested_at).toLocaleString("id-ID")}</p></div>
+              <div><p className="text-xs text-gray-500">Requested</p><p className="font-medium"><ClientDate date={selectedTransfer.requested_at} /></p></div>
             </div>
             <div><p className="text-xs text-gray-500">Reason</p><p className="font-medium">{selectedTransfer.reason}</p></div>
           </div>
@@ -146,7 +147,7 @@ export default function TransfersPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Student</label>
               <select value={formData.student_id || ""} onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Student</option>
                 {students.map((s: any) => <option key={s.id} value={s.id}>{s.full_name} ({s.student_code})</option>)}
               </select>
@@ -160,7 +161,7 @@ export default function TransfersPage() {
             <div>
               <label className="block text-sm font-medium mb-1">From Class</label>
               <select value={formData.from_class_id || ""} onChange={(e) => setFormData({ ...formData, from_class_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Class</option>
                 {classes.map((c: any) => <option key={c.id} value={c.id}>{c.course?.name} - {c.level?.name}</option>)}
               </select>
@@ -168,7 +169,7 @@ export default function TransfersPage() {
             <div>
               <label className="block text-sm font-medium mb-1">To Class</label>
               <select value={formData.to_class_id || ""} onChange={(e) => setFormData({ ...formData, to_class_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Class</option>
                 {classes.map((c: any) => <option key={c.id} value={c.id}>{c.course?.name} - {c.level?.name}</option>)}
               </select>

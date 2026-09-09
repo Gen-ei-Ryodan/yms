@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/lib/utils";
+import { ClientNumber } from "@/components/ClientDate";
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -69,8 +70,8 @@ export default function CoursesPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Course Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage all courses</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Course Management</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage all courses</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Course
@@ -86,9 +87,9 @@ export default function CoursesPage() {
           <Button variant="outline"><Download className="h-4 w-4 mr-2" /> Export</Button>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Code</th>
                 <th className="text-left p-3 font-medium">Name</th>
@@ -101,12 +102,12 @@ export default function CoursesPage() {
             </thead>
             <tbody>
               {courses.map((course) => (
-                <tr key={course.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={course.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-mono text-xs">{course.code}</td>
                   <td className="p-3 font-medium">{course.name}</td>
                   <td className="p-3">{course.level || "N/A"}</td>
                   <td className="p-3">{course.duration} min</td>
-                  <td className="p-3">Rp {course.price?.toLocaleString("id-ID")}</td>
+                  <td className="p-3"><ClientNumber value={course.price} prefix="Rp " /></td>
                   <td className="p-3"><Badge className={getStatusColor(course.status)}>{course.status}</Badge></td>
                   <td className="p-3 text-right">
                     <Button variant="ghost" size="icon" onClick={() => { setSelectedCourse(course); setShowPanel(true); }}><Eye className="h-4 w-4" /></Button>
@@ -130,7 +131,7 @@ export default function CoursesPage() {
             <div className="grid grid-cols-2 gap-4">
               <div><p className="text-xs text-gray-500">Level</p><p className="font-medium">{selectedCourse.level || "N/A"}</p></div>
               <div><p className="text-xs text-gray-500">Duration</p><p className="font-medium">{selectedCourse.duration} minutes</p></div>
-              <div><p className="text-xs text-gray-500">Price</p><p className="font-medium">Rp {selectedCourse.price?.toLocaleString("id-ID")}</p></div>
+              <div><p className="text-xs text-gray-500">Price</p><p className="font-medium"><ClientNumber value={selectedCourse.price} prefix="Rp " /></p></div>
               <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedCourse.status}</p></div>
             </div>
             {selectedCourse.description && (
@@ -169,7 +170,7 @@ export default function CoursesPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Status</label>
             <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
             </select>

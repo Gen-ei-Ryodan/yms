@@ -66,8 +66,8 @@ export default function PaymentsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Payment Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage payments and receipts</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Payment Management</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage payments and receipts</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Record Payment
@@ -81,9 +81,9 @@ export default function PaymentsPage() {
           <Button variant="outline"><Filter className="h-4 w-4 mr-2" /> Filter</Button>
           <Button variant="outline"><Download className="h-4 w-4 mr-2" /> Export</Button>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Payment #</th>
                 <th className="text-left p-3 font-medium">Student</th>
@@ -96,7 +96,7 @@ export default function PaymentsPage() {
             </thead>
             <tbody>
               {payments.map((p) => (
-                <tr key={p.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={p.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-mono text-xs">{p.payment_number}</td>
                   <td className="p-3 font-medium">{p.student?.full_name}</td>
                   <td className="p-3 font-medium">{formatCurrency(p.amount)}</td>
@@ -138,7 +138,7 @@ export default function PaymentsPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Student</label>
               <select value={formData.student_id || ""} onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="">Select Student</option>
                 {students.map((s: any) => <option key={s.id} value={s.id}>{s.full_name} ({s.student_code})</option>)}
               </select>
@@ -152,7 +152,7 @@ export default function PaymentsPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Payment Method</label>
               <select value={formData.payment_method || "CASH"} onChange={(e) => setFormData({ ...formData, payment_method: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
                 <option value="CASH">CASH</option>
                 <option value="BANK_TRANSFER">BANK_TRANSFER</option>
                 <option value="CREDIT_CARD">CREDIT_CARD</option>

@@ -62,8 +62,8 @@ export default function RoomsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Room Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage all rooms</p>
+            <h1 className="text-2xl font-bold text-gray-900 ">Room Management</h1>
+            <p className="text-sm text-gray-500  mt-1">Manage all rooms</p>
           </div>
           <Button onClick={() => { setFormData({}); setShowForm(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Add Room
@@ -75,9 +75,9 @@ export default function RoomsPage() {
             <Input placeholder="Search rooms..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="text-left p-3 font-medium">Code</th>
                 <th className="text-left p-3 font-medium">Name</th>
@@ -89,7 +89,7 @@ export default function RoomsPage() {
             </thead>
             <tbody>
               {rooms.map((room) => (
-                <tr key={room.id} className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <tr key={room.id} className="border-t border-gray-200 hover:bg-gray-100">
                   <td className="p-3 font-mono text-xs">{room.room_code}</td>
                   <td className="p-3 font-medium">{room.name}</td>
                   <td className="p-3">{room.capacity}</td>
@@ -148,7 +148,7 @@ export default function RoomsPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Status</label>
             <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
               <option value="MAINTENANCE">MAINTENANCE</option>
