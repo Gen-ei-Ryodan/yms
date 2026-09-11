@@ -102,19 +102,103 @@ export default function DashboardPage() {
   }
 
   if (user?.role === "teacher") {
+    const d = data as any;
     return (
       <MainLayout>
         <div className="space-y-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-sm text-gray-500 mt-1">Welcome back, {user?.name}!</p>
+          <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-6 text-white">
+            <h1 className="text-2xl font-bold">Halo, {user?.name} 👋</h1>
+            <p className="text-green-100 mt-1">Selamat mengajar hari ini</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard title="Today's Classes" value={(data as any)?.today_classes || 0} icon={Calendar} color="blue" />
-            <StatCard title="Total Students" value={(data as any)?.total_students || 0} icon={Users} color="green" />
-            <StatCard title="Attendance Today" value={(data as any)?.attendance_today || 0} icon={Clock} color="purple" />
-            <StatCard title="Pending Attendance" value={(data as any)?.pending_attendance || 0} icon={Clock} color="orange" />
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg"><Calendar className="h-5 w-5 text-blue-600" /></div>
+                <div>
+                  <p className="text-xs text-gray-400">Jadwal Hari Ini</p>
+                  <p className="text-2xl font-bold text-gray-900">{d?.today_classes_count || 0}</p>
+                  <p className="text-xs text-gray-400">Kelas</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 rounded-lg"><Users className="h-5 w-5 text-green-600" /></div>
+                <div>
+                  <p className="text-xs text-gray-400">Total Murid</p>
+                  <p className="text-2xl font-bold text-gray-900">{d?.total_students || 0}</p>
+                  <p className="text-xs text-gray-400">Siswa</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-100 rounded-lg"><BookOpen className="h-5 w-5 text-purple-600" /></div>
+                <div>
+                  <p className="text-xs text-gray-400">Kelas Aktif</p>
+                  <p className="text-2xl font-bold text-gray-900">{d?.active_classes_count || 0}</p>
+                  <p className="text-xs text-gray-400">Kelas</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-yellow-100 rounded-lg"><TrendingUp className="h-5 w-5 text-yellow-600" /></div>
+                <div>
+                  <p className="text-xs text-gray-400">Progress Murid</p>
+                  <p className="text-2xl font-bold text-gray-900">{d?.progress_rate || 0}%</p>
+                  <p className="text-xs text-gray-400">Kehadiran</p>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Jadwal Hari Ini */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Jadwal Hari Ini</h2>
+            {d?.today_schedules?.length > 0 ? (
+              <div className="space-y-3">
+                {d.today_schedules.map((sched: any) => (
+                  <div key={sched.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                    <div className="text-center min-w-[60px]">
+                      <p className="text-xs text-gray-400">{sched.start_time?.slice(0, 5)}</p>
+                      <div className="w-0.5 h-6 bg-blue-300 mx-auto my-1"></div>
+                      <p className="text-xs text-gray-400">{sched.end_time?.slice(0, 5)}</p>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">{sched.course} {sched.level}</p>
+                      <p className="text-sm text-gray-500">{sched.class_code} · {sched.room}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-blue-600">{sched.enrolled_count} Siswa</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm">Tidak ada jadwal hari ini</p>
+            )}
+          </div>
+
+          {/* Kelas Aktif */}
+          {d?.active_classes?.length > 0 && (
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Kelas Aktif</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {d.active_classes.map((cls: any) => (
+                  <div key={cls.id} className="p-4 bg-gray-50 rounded-lg">
+                    <p className="font-semibold text-gray-900">{cls.course} {cls.level}</p>
+                    <p className="text-sm text-gray-500">{cls.class_code}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xs text-gray-400">{cls.enrolled_count}/{cls.capacity} siswa</span>
+                      <a href={`/student-progress?class_id=${cls.id}`} className="text-xs text-blue-600 hover:underline">Lihat Detail →</a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </MainLayout>
     );

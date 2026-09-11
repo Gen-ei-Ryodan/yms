@@ -7,7 +7,7 @@ import {
   Music, TrendingUp, School, UserPlus, CalendarClock, DoorOpen, CheckCircle,
   CalendarCheck, Banknote, CreditCard, Receipt, DollarSign, Star, Gift,
   RotateCcw, Ticket, Plane, ArrowLeftRight, BarChart3, Settings, User,
-  CalendarDays, FileText, Bell, LogOut, Target, Wallet, Clipboard, History,
+  CalendarDays, FileText, Bell, LogOut, Target, Wallet, Clipboard, History, Calendar,
   UserMinus, ShoppingCart, AlertCircle, BookOpen as BookIcon
 } from "lucide-react";
 import React from "react";
@@ -103,17 +103,38 @@ const adminMenu: MenuGroup[] = superAdminMenu.filter(g => {
   items: g.items.filter(i => i.href !== "/settings"),
 }));
 
-const teacherMenu: MenuItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "My Classes", href: "/my-classes", icon: School },
-  { label: "My Schedule", href: "/my-schedule", icon: CalendarClock },
-  { label: "Student List", href: "/students", icon: GraduationCap },
-  { label: "Attendance", href: "/attendance", icon: CheckCircle },
-  { label: "Attendance History", href: "/attendance-history", icon: CalendarDays },
-  { label: "Student Progress", href: "/student-progress", icon: TrendingUp },
-  { label: "Learning Notes", href: "/learning-notes", icon: Clipboard },
-  { label: "Class Summary", href: "/class-summary", icon: BarChart3 },
-  { label: "Salary", href: "/salary", icon: Wallet },
+const teacherMenu: MenuGroup[] = [
+  { items: [
+    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  ]},
+  { title: "Jadwal Mengajar", items: [
+    { label: "Jadwal Hari Ini", href: "/teacher-schedule", icon: CalendarClock },
+    { label: "Jadwal Mingguan", href: "/my-schedule", icon: Calendar },
+    { label: "Kalender Mengajar", href: "/my-classes", icon: CalendarDays },
+  ]},
+  { title: "Kelas Saya", items: [
+    { label: "Kelas Aktif", href: "/my-classes", icon: School },
+    { label: "Detail Kelas", href: "/class-summary", icon: BookOpen },
+    { label: "Daftar Murid", href: "/students", icon: GraduationCap },
+  ]},
+  { title: "Murid", items: [
+    { label: "Daftar Murid", href: "/students", icon: Users },
+    { label: "Progress Murid", href: "/student-progress", icon: TrendingUp },
+    { label: "Riwayat Absensi", href: "/attendance-history", icon: CalendarDays },
+    { label: "Catatan Pembelajaran", href: "/learning-notes", icon: Clipboard },
+  ]},
+  { title: "Absensi", items: [
+    { label: "Absensi Murid", href: "/teacher-attendance", icon: CheckCircle },
+  ]},
+  { title: "Progress", items: [
+    { label: "Progress Kelas", href: "/class-summary", icon: BarChart3 },
+    { label: "Progress Individu", href: "/student-progress", icon: TrendingUp },
+  ]},
+  { title: "Honor / Gaji", items: [
+    { label: "Rekap Kelas Aktif", href: "/class-summary", icon: Clipboard },
+    { label: "Perhitungan Honor", href: "/salary", icon: Wallet },
+    { label: "Riwayat Pembayaran", href: "/salary", icon: Receipt },
+  ]},
 ];
 
 const studentMenu: MenuGroup[] = [

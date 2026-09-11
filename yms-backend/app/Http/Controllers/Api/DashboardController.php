@@ -144,51 +144,69 @@ class DashboardController extends Controller
             return response()->json(['success' => false, 'message' => 'Teacher not found'], 404);
         }
 
-        $today = now()->toDateString();
         $dayOfWeek = now()->format('l');
 
-        $todayClasses = \App\Models\ClassSchedule::with(['class.course', 'class.level', 'class.room'])
-            ->where('teacher_id', $teacher->id)
+        // ── Jadwal Hari Ini ──
+        $todaySchedules = \App\Models\ClassSchedule::with(['class.course', 'class.level', 'class.room'])
+            ->whereHas('class', fn($q) => $q->where('teacher_id', $teacher->id))
             ->where('day_of_week', $dayOfWeek)
             ->where('status', 'ACTIVE')
             ->orderBy('start_time')
-            ->get();
-
-        $upcomingClasses = \App\Models\ClassSchedule::with(['class.course', 'class.level', 'class.room'])
-            ->where('teacher_id', $teacher->id)
-            ->where('status', 'ACTIVE')
-            ->where('effective_from', '>=', $today)
-            ->orderBy('start_time')
-            ->limit(5)
-            ->get();
-
-        $totalStudents = \App\Models\ClassEnrollment::whereHas('class', function ($q) use ($teacher) {
-            $q->where('teacher_id', $teacher->id);
-        })->where('status', 'ACTIVE')->count();
-
-        $attendanceToday = \App\Models\Attendance::whereHas('class', function ($q) use ($teacher) {
-            $q->where('teacher_id', $teacher->id);
-        })->whereDate('attendance_date', $today)->count();
-
-        $pendingAttendance = \App\Models\ClassSchedule::where('teacher_id', $teacher->id)
-            ->where('day_of_week', $dayOfWeek)
-            ->where('status', 'ACTIVE')
             ->get()
-            ->filter(function ($schedule) use ($today) {
-                return !\App\Models\Attendance::where('schedule_id', $schedule->id)
-                    ->whereDate('attendance_date', $today)
-                    ->exists();
-            })
-            ->count();
+            ->map(function ($s) {
+                $enrolledCount = $s->class->enrollments()->where('status', 'ACTIVE')->count();
+                return [
+                    'id' => $s->id,
+                    'class_id' => $s->class_id,
+                    'class_code' => $s->class->class_code,
+                    'course' => $s->class->course->name,
+                    'level' => $s->class->level->name,
+                    'room' => $s->class->room->name ?? 'N/A',
+                    'start_time' => $s->start_time,
+                    'end_time' => $s->end_time,
+                    'enrolled_count' => $enrolledCount,
+                ];
+            });
+
+        // ── Kelas Aktif ──
+        $activeClasses = \App\Models\ClassModel::where('teacher_id', $teacher->id)
+            ->where('status', 'ACTIVE')
+            ->with(['course', 'level'])
+            ->get()
+            ->map(fn($c) => [
+                'id' => $c->id,
+                'class_code' => $c->class_code,
+                'course' => $c->course->name,
+                'level' => $c->level->name,
+                'enrolled_count' => $c->enrollments()->where('status', 'ACTIVE')->count(),
+                'capacity' => $c->capacity,
+            ]);
+
+        // ── Total Murid ──
+        $totalStudents = \App\Models\ClassEnrollment::whereHas('class', fn($q) => $q->where('teacher_id', $teacher->id))
+            ->where('status', 'ACTIVE')->count();
+
+        // ── Progress (attendance rate) ──
+        $totalAttendance = \App\Models\Attendance::whereHas('class', fn($q) => $q->where('teacher_id', $teacher->id))->count();
+        $presentCount = \App\Models\Attendance::whereHas('class', fn($q) => $q->where('teacher_id', $teacher->id))->whereIn('status', ['PRESENT', 'LATE'])->count();
+        $progressRate = $totalAttendance > 0 ? ($presentCount / $totalAttendance) * 100 : 0;
+
+        // ── Absensi Hari Ini ──
+        $attendanceToday = \App\Models\Attendance::whereHas('class', fn($q) => $q->where('teacher_id', $teacher->id))
+            ->whereDate('date', now()->toDateString())->count();
+        $pendingAttendance = max(0, $todaySchedules->sum('enrolled_count') - $attendanceToday);
 
         return response()->json([
             'success' => true,
             'data' => [
-                'today_classes' => $todayClasses,
-                'upcoming_classes' => $upcomingClasses,
+                'today_schedules' => $todaySchedules,
+                'today_classes_count' => $todaySchedules->count(),
                 'total_students' => $totalStudents,
+                'active_classes_count' => $activeClasses->count(),
+                'progress_rate' => round($progressRate, 2),
                 'attendance_today' => $attendanceToday,
                 'pending_attendance' => $pendingAttendance,
+                'active_classes' => $activeClasses,
             ],
         ]);
     }
