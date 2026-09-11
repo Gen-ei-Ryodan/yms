@@ -29,6 +29,9 @@ use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Controllers\Api\StudentProgressController;
+use App\Http\Controllers\Api\LearningNoteController;
+use App\Http\Controllers\Api\TeacherSalaryController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -159,4 +162,19 @@ Route::prefix('v1')->group(function () {
     Route::get('/reports/revenue', [ReportController::class, 'revenueReport'])->middleware('auth:sanctum');
     Route::get('/reports/loyalty', [ReportController::class, 'loyaltyReport'])->middleware('auth:sanctum');
     Route::get('/reports/classes', [ReportController::class, 'classReport'])->middleware('auth:sanctum');
+
+    // Student Progress
+    Route::apiResource('student-progress', StudentProgressController::class)->middleware('auth:sanctum');
+    Route::get('/student-progress/student/{studentId}', [StudentProgressController::class, 'studentProgress'])->middleware('auth:sanctum');
+
+    // Learning Notes
+    Route::apiResource('learning-notes', LearningNoteController::class)->middleware('auth:sanctum');
+    Route::get('/learning-notes/student/{studentId}', [LearningNoteController::class, 'byStudent'])->middleware('auth:sanctum');
+
+    // Teacher Salaries
+    Route::apiResource('teacher-salaries', TeacherSalaryController::class)->middleware('auth:sanctum');
+    Route::get('/my-salary', [TeacherSalaryController::class, 'mySalary'])->middleware('auth:sanctum');
+
+    // Teacher Class Summary
+    Route::get('/teacher/class-summary', [DashboardController::class, 'teacherClassSummary'])->middleware('auth:sanctum');
 });

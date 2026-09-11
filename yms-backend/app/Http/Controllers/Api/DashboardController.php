@@ -195,4 +195,65 @@ class DashboardController extends Controller
             ],
         ]);
     }
+
+    public function teacherClassSummary()
+    {
+        $teacher = auth()->user()->teacher;
+        if (!$teacher) {
+            return response()->json(['success' => false, 'message' => 'Teacher not found'], 404);
+        }
+
+        $classes = \App\Models\ClassModel::with(['course', 'level', 'room'])
+            ->where('teacher_id', $teacher->id)
+            ->where('status', 'ACTIVE')
+            ->get()
+            ->map(function ($class) {
+                $enrolledCount = $class->enrollments()->where('status', 'ACTIVE')->count();
+                $totalAttendance = $class->attendances()->count();
+                $presentCount = $class->attendances()->where('status', 'PRESENT')->count();
+                $lateCount = $class->attendances()->where('status', 'LATE')->count();
+                $attendanceRate = $totalAttendance > 0 ? (($presentCount + $lateCount) / $totalAttendance) * 100 : 0;
+
+                return [
+                    'id' => $class->id,
+                    'class_code' => $class->class_code,
+                    'course_name' => $class->course->name,
+                    'level_name' => $class->level->name,
+                    'room_name' => $class->room->name,
+                    'capacity' => $class->capacity,
+                    'enrolled_count' => $enrolledCount,
+                    'attendance_rate' => round($attendanceRate, 2),
+                    'total_sessions' => $totalAttendance,
+                ];
+            });
+
+        $totalStudents = \App\Models\ClassEnrollment::whereHas('class', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })->where('status', 'ACTIVE')->count();
+
+        $totalAttendance = \App\Models\Attendance::whereHas('class', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })->count();
+
+        $presentCount = \App\Models\Attendance::whereHas('class', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })->where('status', 'PRESENT')->count();
+
+        $lateCount = \App\Models\Attendance::whereHas('class', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })->where('status', 'LATE')->count();
+
+        $overallRate = $totalAttendance > 0 ? (($presentCount + $lateCount) / $totalAttendance) * 100 : 0;
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'classes' => $classes,
+                'total_students' => $totalStudents,
+                'total_classes' => $classes->count(),
+                'overall_attendance_rate' => round($overallRate, 2),
+                'total_sessions' => $totalAttendance,
+            ],
+        ]);
+    }
 }
