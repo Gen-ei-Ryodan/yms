@@ -8,7 +8,7 @@ import axios from "axios";
 import {
   Loader2, TrendingUp, Users, GraduationCap, Calendar, DollarSign, Star,
   Clock, School, BookOpen, ShoppingCart, ArrowLeftRight, Plane, Gift,
-  CheckCircle, AlertCircle, XCircle, UserMinus
+  CheckCircle, AlertCircle, XCircle, UserMinus, Receipt
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -121,18 +121,112 @@ export default function DashboardPage() {
   }
 
   if (user?.role === "student") {
+    const d = data as any;
+    const classInfo = d?.current_class?.class;
+    const schedules = classInfo?.schedules || [];
+    const nextSched = d?.next_schedule;
+
     return (
       <MainLayout>
         <div className="space-y-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-sm text-gray-500 mt-1">Welcome back, {user?.name}!</p>
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white">
+            <h1 className="text-2xl font-bold">Halo, {user?.name} 👋</h1>
+            <p className="text-blue-100 mt-1">Selamat datang di Yamaha Music School</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard title="Membership Status" value={(data as any).membership_status || "N/A"} icon={GraduationCap} color="blue" />
-            <StatCard title="Attendance Rate" value={`${(data as any).attendance_rate || 0}%`} icon={TrendingUp} color="green" />
-            <StatCard title="Loyalty Points" value={(data as any).loyalty_points || 0} icon={Star} color="yellow" />
-            <StatCard title="Payment Status" value={(data as any).payment_status || "N/A"} icon={DollarSign} color="purple" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Info Card */}
+            <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Kelas Aktif</p>
+                  <h2 className="text-xl font-bold text-gray-900 mt-1">
+                    {classInfo ? `${classInfo.course?.name} ${classInfo.level?.name}` : "Tidak ada kelas"}
+                  </h2>
+                  {classInfo && <p className="text-sm text-gray-500">{classInfo.class_code}</p>}
+                </div>
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                  {d?.membership_status || "Active"}
+                </span>
+              </div>
+
+              {classInfo && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
+                  <div>
+                    <p className="text-xs text-gray-400">Pengajar</p>
+                    <p className="text-sm font-semibold">{classInfo.teacher?.name || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400">Ruangan</p>
+                    <p className="text-sm font-semibold">{classInfo.room?.name || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400">Kapasitas</p>
+                    <p className="text-sm font-semibold">{classInfo.capacity} siswa</p>
+                  </div>
+                  {nextSched && (
+                    <div className="col-span-2 md:col-span-3">
+                      <p className="text-xs text-gray-400">Jadwal Berikutnya</p>
+                      <p className="text-sm font-semibold text-blue-600">
+                        {nextSched.day_of_week}, {nextSched.start_time} - {nextSched.end_time}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!classInfo && (
+                <p className="text-gray-400 text-sm mt-4">Anda belum terdaftar di kelas manapun.</p>
+              )}
+            </div>
+
+            {/* Sidebar Stats */}
+            <div className="space-y-4">
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Saldo Loyalty</p>
+                <p className="text-3xl font-bold text-yellow-500 mt-1">{d?.loyalty_points || 0}</p>
+                <p className="text-xs text-gray-400 mt-1">poin</p>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Tingkat Kehadiran</p>
+                <p className="text-3xl font-bold text-green-600 mt-1">{d?.attendance_rate || 0}%</p>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Status Pembayaran</p>
+                <p className="text-sm font-bold mt-1">{d?.payment_status === "ACTIVE" ? "Lunas" : d?.payment_status || "N/A"}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Shortcut Buttons */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Akses Cepat</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <a href="/requests" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all">
+                <Plane className="h-6 w-6 text-blue-600" />
+                <span className="text-xs font-medium text-gray-700 text-center">Ajukan Cuti</span>
+              </a>
+              <a href="/requests" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all">
+                <ArrowLeftRight className="h-6 w-6 text-purple-600" />
+                <span className="text-xs font-medium text-gray-700 text-center">Pindah Kelas</span>
+              </a>
+              <a href="/my-class" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all">
+                <Calendar className="h-6 w-6 text-green-600" />
+                <span className="text-xs font-medium text-gray-700 text-center">Lihat Jadwal</span>
+              </a>
+              <a href="/my-transactions" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
+                <Receipt className="h-6 w-6 text-orange-600" />
+                <span className="text-xs font-medium text-gray-700 text-center">Riwayat Pembayaran</span>
+              </a>
+              <a href="/attendance" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-yellow-300 hover:bg-yellow-50 transition-all">
+                <CheckCircle className="h-6 w-6 text-yellow-600" />
+                <span className="text-xs font-medium text-gray-700 text-center">Riwayat Absensi</span>
+              </a>
+              <a href="/rewards" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all">
+                <Gift className="h-6 w-6 text-pink-600" />
+                <span className="text-xs font-medium text-gray-700 text-center">Reward</span>
+              </a>
+            </div>
           </div>
         </div>
       </MainLayout>

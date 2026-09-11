@@ -116,17 +116,39 @@ const teacherMenu: MenuItem[] = [
   { label: "Salary", href: "/salary", icon: Wallet },
 ];
 
-const studentMenu: MenuItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "My Profile", href: "/profile", icon: User },
-  { label: "My Class", href: "/my-class", icon: School },
-  { label: "Progress", href: "/progress", icon: TrendingUp },
-  { label: "Attendance", href: "/attendance", icon: CheckCircle },
-  { label: "Transactions", href: "/my-transactions", icon: Receipt },
-  { label: "Loyalty", href: "/loyalty", icon: Star },
-  { label: "Rewards", href: "/rewards", icon: Gift },
-  { label: "Requests", href: "/requests", icon: FileText },
-  { label: "Notifications", href: "/notifications", icon: Bell },
+const studentMenu: MenuGroup[] = [
+  { items: [
+    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  ]},
+  { title: "Profil", items: [
+    { label: "Data Saya", href: "/profile", icon: User },
+    { label: "Orang Tua / Wali", href: "/profile/parents", icon: Users },
+  ]},
+  { title: "Kelas Saya", items: [
+    { label: "Kelas Aktif", href: "/my-class", icon: School },
+    { label: "Jadwal", href: "/my-class/schedule", icon: CalendarClock },
+    { label: "Program & Level", href: "/my-class/program", icon: Music },
+    { label: "Progress Belajar", href: "/progress", icon: TrendingUp },
+  ]},
+  { title: "Absensi", items: [
+    { label: "Absensi Saya", href: "/attendance", icon: CheckCircle },
+    { label: "Riwayat Absensi", href: "/student/attendance-history", icon: CalendarDays },
+  ]},
+  { title: "Pengajuan", items: [
+    { label: "Ajukan Cuti / Libur", href: "/requests", icon: Plane },
+    { label: "Ajukan Pindah Kelas", href: "/requests", icon: ArrowLeftRight },
+  ]},
+  { title: "Transaksi", items: [
+    { label: "Pembayaran Les", href: "/my-payments", icon: DollarSign },
+    { label: "Riwayat Pembayaran", href: "/my-transactions", icon: Receipt },
+    { label: "Pembelian", href: "/my-purchases", icon: ShoppingCart },
+    { label: "Invoice", href: "/my-invoices", icon: FileText },
+  ]},
+  { title: "Loyalty", items: [
+    { label: "Saldo Poin", href: "/loyalty", icon: Star },
+    { label: "Reward", href: "/rewards", icon: Gift },
+    { label: "Riwayat Penukaran", href: "/my-redemptions", icon: RotateCcw },
+  ]},
 ];
 
 const menuData: Record<string, MenuGroup[] | MenuItem[]> = {
