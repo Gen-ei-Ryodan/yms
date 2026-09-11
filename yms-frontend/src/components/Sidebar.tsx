@@ -115,16 +115,16 @@ const teacherMenu: MenuGroup[] = [
   { title: "Kelas Saya", items: [
     { label: "Kelas Aktif", href: "/my-classes", icon: School },
     { label: "Detail Kelas", href: "/class-summary", icon: BookOpen },
-    { label: "Daftar Murid", href: "/students", icon: GraduationCap },
+    { label: "Daftar Murid", href: "/teacher/my-students", icon: GraduationCap },
   ]},
   { title: "Murid", items: [
-    { label: "Daftar Murid", href: "/students", icon: Users },
+    { label: "Daftar Murid", href: "/teacher/my-students", icon: Users },
     { label: "Progress Murid", href: "/student-progress", icon: TrendingUp },
     { label: "Riwayat Absensi", href: "/attendance-history", icon: CalendarDays },
     { label: "Catatan Pembelajaran", href: "/learning-notes", icon: Clipboard },
   ]},
   { title: "Absensi", items: [
-    { label: "Absensi Murid", href: "/teacher-attendance", icon: CheckCircle },
+    { label: "Absensi Murid", href: "/teacher/student-attendance", icon: CheckCircle },
   ]},
   { title: "Progress", items: [
     { label: "Progress Kelas", href: "/class-summary", icon: BarChart3 },

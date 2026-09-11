@@ -19,10 +19,15 @@ class StudentProgress extends Model
         'score',
         'level',
         'assessed_at',
+        'lessons_completed',
+        'total_lessons',
+        'teacher_notes',
     ];
 
     protected $casts = [
         'score' => 'integer',
+        'lessons_completed' => 'integer',
+        'total_lessons' => 'integer',
         'assessed_at' => 'date',
     ];
 

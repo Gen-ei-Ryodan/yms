@@ -79,6 +79,9 @@ class StudentProgressController extends Controller
             'score' => 'nullable|integer|min:0|max:100',
             'level' => 'in:BEGINNER,DEVELOPING,PROFICIENT,EXCELLENT',
             'assessed_at' => 'required|date',
+            'lessons_completed' => 'nullable|integer|min:0',
+            'total_lessons' => 'nullable|integer|min:1',
+            'teacher_notes' => 'nullable|string',
         ]);
 
         $teacher = auth()->user()->teacher;
