@@ -10,34 +10,65 @@ class DashboardController extends Controller
     public function admin()
     {
         $today = now()->toDateString();
+        $dayOfWeek = now()->format('l');
 
+        // ── Siswa ──
         $totalStudents = \App\Models\Student::count();
         $activeStudents = \App\Models\Student::where('status', 'ACTIVE')->count();
-        $inactiveStudents = \App\Models\Student::where('status', '!=', 'ACTIVE')->count();
         $newStudents = \App\Models\Student::where('join_date', '>=', now()->subDays(30))->count();
         $studentsOnLeave = \App\Models\StudentLeave::where('status', 'APPROVED')
             ->where('start_date', '<=', $today)
             ->where('end_date', '>=', $today)
             ->count();
+        $studentsHoliday = \App\Models\StudentLeave::where('status', 'APPROVED')
+            ->where('start_date', '<=', $today)
+            ->where('end_date', '>=', $today)
+            ->whereRaw("LOWER(reason) LIKE '%libur%' OR LOWER(reason) LIKE '%holiday%'")
+            ->count();
+        $studentsGraduated = \App\Models\Student::where('status', 'GRADUATED')->count();
+        $studentsTransferred = \App\Models\Student::where('status', 'TRANSFERRED')->count();
+        $studentsInactive = \App\Models\Student::where('status', 'INACTIVE')->count();
+        $studentsSuspended = \App\Models\Student::where('status', 'SUSPENDED')->count();
+        $studentsLeft = $studentsGraduated + $studentsTransferred + $studentsInactive + $studentsSuspended;
 
+        // ── Kelas ──
+        $totalClasses = \App\Models\ClassModel::count();
+        $activeClasses = \App\Models\ClassModel::where('status', 'ACTIVE')->count();
+        $fullClasses = \App\Models\ClassModel::where('status', 'FULL')->count();
+        $todaySchedules = \App\Models\ClassSchedule::where('day_of_week', $dayOfWeek)
+            ->where('status', 'ACTIVE')
+            ->where('effective_from', '<=', $today)
+            ->where(function ($q) use ($today) {
+                $q->whereNull('effective_until')->orWhere('effective_until', '>=', $today);
+            })
+            ->count();
+        $studentsPerClass = \App\Models\ClassEnrollment::where('status', 'ACTIVE')
+            ->selectRaw('class_id, COUNT(*) as total')
+            ->groupBy('class_id')
+            ->pluck('total', 'class_id');
+
+        // ── Absensi ──
         $todayAttendance = \App\Models\Attendance::whereDate('attendance_date', $today)->count();
         $presentToday = \App\Models\Attendance::whereDate('attendance_date', $today)->where('status', 'PRESENT')->count();
         $lateToday = \App\Models\Attendance::whereDate('attendance_date', $today)->where('status', 'LATE')->count();
         $absentToday = \App\Models\Attendance::whereDate('attendance_date', $today)->where('status', 'ABSENT')->count();
+        $onLeaveToday = \App\Models\Attendance::whereDate('attendance_date', $today)->where('status', 'ON_LEAVE')->count();
+        $excusedToday = \App\Models\Attendance::whereDate('attendance_date', $today)->where('status', 'EXCUSED')->count();
+        $attendanceRate = $todayAttendance > 0 ? (($presentToday + $lateToday) / $todayAttendance) * 100 : 0;
 
-        $totalScheduled = \App\Models\Attendance::whereDate('attendance_date', $today)->count();
-        $attendanceRate = $totalScheduled > 0 ? (($presentToday + $lateToday) / $totalScheduled) * 100 : 0;
-
-        $activeClasses = \App\Models\ClassModel::where('status', 'ACTIVE')->count();
-        $todayClasses = \App\Models\ClassModel::where('status', 'ACTIVE')->count();
-        $fullClasses = \App\Models\ClassModel::where('status', 'FULL')->count();
-        $availableCapacity = \App\Models\ClassModel::sum('capacity') - \App\Models\ClassEnrollment::where('status', 'ACTIVE')->count();
-
+        // ── Transaksi ──
         $todayRevenue = \App\Models\Payment::whereDate('payment_date', $today)->where('status', 'PAID')->sum('amount');
-        $monthlyRevenue = \App\Models\Payment::whereMonth('payment_date', now()->month)->whereYear('payment_date', now()->year)->where('status', 'PAID')->sum('amount');
-        $outstandingPayment = \App\Models\Invoice::whereNotIn('status', ['PAID', 'CANCELLED'])->sum('total') - \App\Models\Payment::where('status', 'PAID')->sum('amount');
+        $todayPurchases = \App\Models\Subscription::whereDate('created_at', $today)->count();
+        $totalTransactions = \App\Models\Payment::where('status', 'PAID')->count();
+        $monthlyRevenue = \App\Models\Payment::whereMonth('payment_date', now()->month)
+            ->whereYear('payment_date', now()->year)
+            ->where('status', 'PAID')
+            ->sum('amount');
+        $outstandingPayment = \App\Models\Invoice::whereNotIn('status', ['PAID', 'CANCELLED'])->sum('total')
+            - \App\Models\Payment::where('status', 'PAID')->sum('amount');
         $overdueInvoice = \App\Models\Invoice::where('status', 'UNPAID')->where('due_date', '<', $today)->count();
 
+        // ── Loyalty ──
         $totalPointsIssued = \App\Models\LoyaltyTransaction::where('type', 'EARN')->sum('points');
         $pointsRedeemed = \App\Models\LoyaltyTransaction::where('type', 'REDEEM')->sum('points');
         $activeLoyaltyMembers = \App\Models\Student::whereHas('loyaltyTransactions', function ($q) {
@@ -45,15 +76,33 @@ class DashboardController extends Controller
         })->count();
         $rewardRedemption = \App\Models\RewardRedemption::where('status', 'APPROVED')->count();
 
+        // ── Approvals ──
+        $pendingLeaves = \App\Models\StudentLeave::where('status', 'PENDING')->count();
+        $pendingTransfers = \App\Models\ClassTransfer::where('status', 'PENDING')->count();
+        $pendingRedemptions = \App\Models\RewardRedemption::where('status', 'PENDING')->count();
+        $totalPendingApprovals = $pendingLeaves + $pendingTransfers + $pendingRedemptions;
+
         return response()->json([
             'success' => true,
             'data' => [
                 'students' => [
                     'total_students' => $totalStudents,
                     'active_students' => $activeStudents,
-                    'inactive_students' => $inactiveStudents,
                     'new_students' => $newStudents,
                     'students_on_leave' => $studentsOnLeave,
+                    'students_holiday' => $studentsHoliday,
+                    'students_left' => $studentsLeft,
+                    'students_graduated' => $studentsGraduated,
+                    'students_transferred' => $studentsTransferred,
+                    'students_inactive' => $studentsInactive,
+                    'students_suspended' => $studentsSuspended,
+                ],
+                'classes' => [
+                    'total_classes' => $totalClasses,
+                    'active_classes' => $activeClasses,
+                    'full_classes' => $fullClasses,
+                    'today_schedules' => $todaySchedules,
+                    'students_per_class' => $studentsPerClass,
                 ],
                 'attendance' => [
                     'today_attendance' => $todayAttendance,
@@ -61,15 +110,13 @@ class DashboardController extends Controller
                     'present_today' => $presentToday,
                     'late_today' => $lateToday,
                     'absent_today' => $absentToday,
-                ],
-                'classes' => [
-                    'active_classes' => $activeClasses,
-                    'today_classes' => $todayClasses,
-                    'available_capacity' => $availableCapacity,
-                    'full_classes' => $fullClasses,
+                    'on_leave_today' => $onLeaveToday,
+                    'excused_today' => $excusedToday,
                 ],
                 'payment' => [
                     'today_revenue' => $todayRevenue,
+                    'today_purchases' => $todayPurchases,
+                    'total_transactions' => $totalTransactions,
                     'monthly_revenue' => $monthlyRevenue,
                     'outstanding_payment' => max(0, $outstandingPayment),
                     'overdue_invoice' => $overdueInvoice,
@@ -79,6 +126,12 @@ class DashboardController extends Controller
                     'points_redeemed' => $pointsRedeemed,
                     'active_loyalty_members' => $activeLoyaltyMembers,
                     'reward_redemption' => $rewardRedemption,
+                ],
+                'approvals' => [
+                    'total_pending' => $totalPendingApprovals,
+                    'pending_leaves' => $pendingLeaves,
+                    'pending_transfers' => $pendingTransfers,
+                    'pending_redemptions' => $pendingRedemptions,
                 ],
             ],
         ]);
