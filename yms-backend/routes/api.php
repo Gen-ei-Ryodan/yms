@@ -169,6 +169,7 @@ Route::prefix('v1')->group(function () {
     // Approvals
     Route::get('/approvals', [ApprovalController::class, 'index'])->middleware('auth:sanctum');
     Route::post('/approvals/approve-leaves', [ApprovalController::class, 'approveLeaves'])->middleware('auth:sanctum');
+    Route::post('/approvals/reject-leaves', [ApprovalController::class, 'rejectLeaves'])->middleware('auth:sanctum');
     Route::post('/approvals/approve-transfers', [ApprovalController::class, 'approveTransfers'])->middleware('auth:sanctum');
 
     // Student Progress

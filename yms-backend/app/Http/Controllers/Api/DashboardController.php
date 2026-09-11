@@ -232,6 +232,33 @@ class DashboardController extends Controller
 
         $activeVouchers = $student->vouchers()->where('status', 'AVAILABLE')->get();
 
+        // ── Progress Belajar ──
+        $latestProgress = \App\Models\StudentProgress::where('student_id', $student->id)
+            ->latest('assessed_at')
+            ->first();
+
+        $totalLessons = \App\Models\Attendance::where('student_id', $student->id)
+            ->whereIn('status', ['PRESENT', 'LATE'])
+            ->count();
+
+        $completedLessons = \App\Models\Attendance::where('student_id', $student->id)
+            ->where('status', 'PRESENT')
+            ->count();
+
+        $latestNote = \App\Models\LearningNote::where('student_id', $student->id)
+            ->latest('note_date')
+            ->first();
+
+        $progress = [
+            'total_lessons' => $totalLessons,
+            'completed_lessons' => $completedLessons,
+            'latest_topic' => $latestProgress?->title,
+            'latest_level' => $latestProgress?->level,
+            'teacher_notes' => $latestNote?->content,
+            'teacher_feedback' => $latestNote?->teacher_feedback,
+            'last_material' => $latestNote?->topic,
+        ];
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -245,6 +272,7 @@ class DashboardController extends Controller
                 'loyalty_points' => $loyaltyBalance,
                 'available_rewards' => $availableRewards,
                 'active_vouchers' => $activeVouchers,
+                'progress' => $progress,
             ],
         ]);
     }

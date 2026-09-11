@@ -82,9 +82,19 @@ class ApprovalController extends Controller
         $count = 0;
 
         foreach ($ids['ids'] as $id) {
-            $leave = \App\Models\StudentLeave::find($id);
+            $leave = \App\Models\StudentLeave::with('student')->find($id);
             if ($leave && $leave->status === 'PENDING') {
                 $leave->update(['status' => 'APPROVED', 'approved_at' => now(), 'approved_by' => auth()->id()]);
+
+                // Update status siswa → CUTI / LIBUR
+                $leaveType = $leave->type === 'HOLIDAY' ? 'HOLIDAY' : 'ON_LEAVE';
+                $leave->student->update(['membership_status' => $leaveType]);
+
+                // Deactivate all active enrollments during leave
+                \App\Models\ClassEnrollment::where('student_id', $leave->student_id)
+                    ->where('status', 'ACTIVE')
+                    ->update(['status' => 'SUSPENDED']);
+
                 \App\Models\AuditLog::log('approve', 'student_leave', $leave);
                 $count++;
             }
@@ -93,6 +103,26 @@ class ApprovalController extends Controller
         return response()->json([
             'success' => true,
             'message' => "{$count} leave(s) approved",
+        ]);
+    }
+
+    public function rejectLeaves(Request $request)
+    {
+        $ids = $request->validate(['ids' => 'required|array']);
+        $count = 0;
+
+        foreach ($ids['ids'] as $id) {
+            $leave = \App\Models\StudentLeave::find($id);
+            if ($leave && $leave->status === 'PENDING') {
+                $leave->update(['status' => 'REJECTED', 'approved_at' => now(), 'approved_by' => auth()->id()]);
+                \App\Models\AuditLog::log('reject', 'student_leave', $leave);
+                $count++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$count} leave(s) rejected",
         ]);
     }
 

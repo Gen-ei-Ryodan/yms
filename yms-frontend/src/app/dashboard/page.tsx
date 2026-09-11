@@ -228,6 +228,47 @@ export default function DashboardPage() {
               </a>
             </div>
           </div>
+
+          {/* Progress Belajar */}
+          {d?.progress && (
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="h-5 w-5 text-blue-600" />
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Progress Belajar</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Program</span>
+                    <span className="font-semibold">{classInfo?.course?.name || "N/A"}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Level</span>
+                    <span className="font-semibold">{d.progress.latest_level || classInfo?.level?.name || "N/A"}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Lesson</span>
+                    <span className="font-semibold">{d.progress.completed_lessons} / {d.progress.total_lessons}</span>
+                  </div>
+                  {d.progress.latest_topic && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500">Materi Terakhir</span>
+                      <span className="font-semibold text-blue-600">{d.progress.last_material || d.progress.latest_topic}</span>
+                    </div>
+                  )}
+                </div>
+                {d.progress.teacher_notes && (
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-xs text-gray-400 uppercase font-semibold mb-2">Catatan Guru</p>
+                    <p className="text-sm text-gray-700">{d.progress.teacher_notes}</p>
+                    {d.progress.teacher_feedback && (
+                      <p className="text-sm text-gray-500 mt-2 italic">"{d.progress.teacher_feedback}"</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </MainLayout>
     );
