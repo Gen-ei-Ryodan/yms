@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\StudentProgressController;
 use App\Http\Controllers\Api\LearningNoteController;
 use App\Http\Controllers\Api\TeacherSalaryController;
+use App\Http\Controllers\Api\ApprovalController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -162,6 +163,13 @@ Route::prefix('v1')->group(function () {
     Route::get('/reports/revenue', [ReportController::class, 'revenueReport'])->middleware('auth:sanctum');
     Route::get('/reports/loyalty', [ReportController::class, 'loyaltyReport'])->middleware('auth:sanctum');
     Route::get('/reports/classes', [ReportController::class, 'classReport'])->middleware('auth:sanctum');
+    Route::get('/reports/purchases', [ReportController::class, 'purchaseReport'])->middleware('auth:sanctum');
+    Route::get('/reports/teachers', [ReportController::class, 'teacherReport'])->middleware('auth:sanctum');
+
+    // Approvals
+    Route::get('/approvals', [ApprovalController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('/approvals/approve-leaves', [ApprovalController::class, 'approveLeaves'])->middleware('auth:sanctum');
+    Route::post('/approvals/approve-transfers', [ApprovalController::class, 'approveTransfers'])->middleware('auth:sanctum');
 
     // Student Progress
     Route::apiResource('student-progress', StudentProgressController::class)->middleware('auth:sanctum');

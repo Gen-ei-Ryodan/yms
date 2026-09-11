@@ -215,4 +215,94 @@ class ReportController extends Controller
             'data' => $report,
         ]);
     }
+
+    public function purchaseReport(Request $request)
+    {
+        $query = \App\Models\Subscription::with(['student.user', 'product.course']);
+
+        if ($request->start_date && $request->end_date) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+        }
+
+        if ($request->course_id) {
+            $query->whereHas('product', function ($q) use ($request) {
+                $q->where('course_id', $request->course_id);
+            });
+        }
+
+        $subscriptions = $query->latest()->get();
+
+        $report = $subscriptions->map(function ($s) {
+            return [
+                'date' => $s->created_at?->toDateString(),
+                'student' => $s->student->full_name,
+                'student_code' => $s->student->student_code,
+                'product' => $s->product->name,
+                'course' => $s->product->course->name ?? 'N/A',
+                'amount' => $s->price,
+                'start_date' => $s->start_date,
+                'end_date' => $s->end_date,
+                'status' => $s->status,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'total_purchases' => $subscriptions->count(),
+                'total_value' => $subscriptions->sum('price'),
+                'details' => $report,
+            ],
+        ]);
+    }
+
+    public function teacherReport(Request $request)
+    {
+        $query = \App\Models\Teacher::with(['user', 'classes.course', 'classes.level']);
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->specialization) {
+            $query->where('specialization', $request->specialization);
+        }
+
+        $teachers = $query->get();
+
+        $report = $teachers->map(function ($teacher) {
+            $totalClasses = $teacher->classes()->count();
+            $activeClasses = $teacher->classes()->where('status', 'ACTIVE')->count();
+            $totalStudents = \App\Models\ClassEnrollment::whereHas('class', function ($q) use ($teacher) {
+                $q->where('teacher_id', $teacher->id);
+            })->where('status', 'ACTIVE')->count();
+
+            $totalAttendance = \App\Models\Attendance::whereHas('class', function ($q) use ($teacher) {
+                $q->where('teacher_id', $teacher->id);
+            })->count();
+            $presentCount = \App\Models\Attendance::whereHas('class', function ($q) use ($teacher) {
+                $q->where('teacher_id', $teacher->id);
+            })->where('status', 'PRESENT')->count();
+
+            $salary = \App\Models\TeacherSalary::where('teacher_id', $teacher->id)->where('status', 'PAID')->sum('total_salary');
+
+            return [
+                'name' => $teacher->name,
+                'teacher_code' => $teacher->teacher_code,
+                'specialization' => $teacher->specialization,
+                'status' => $teacher->status,
+                'total_classes' => $totalClasses,
+                'active_classes' => $activeClasses,
+                'total_students' => $totalStudents,
+                'total_sessions' => $totalAttendance,
+                'attendance_rate' => $totalAttendance > 0 ? round(($presentCount / $totalAttendance) * 100, 2) : 0,
+                'total_salary_paid' => $salary,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $report,
+        ]);
+    }
 }
