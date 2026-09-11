@@ -86,7 +86,8 @@ const superAdminMenu: MenuGroup[] = [
     { label: "Kelas Guru", href: "/teacher-classes", icon: School },
     { label: "Progress Murid", href: "/student-progress", icon: TrendingUp },
     { label: "Catatan Pembelajaran", href: "/learning-notes", icon: Clipboard },
-    { label: "Honor / Gaji", href: "/salary", icon: Wallet },
+    { label: "Master Honor", href: "/salary-rules", icon: Wallet },
+    { label: "Honor / Gaji", href: "/salary", icon: DollarSign },
   ]},
   { title: "Laporan", items: [
     { label: "Laporan Siswa", href: "/reports", icon: BarChart3 },
@@ -132,7 +133,7 @@ const teacherMenu: MenuGroup[] = [
   ]},
   { title: "Honor / Gaji", items: [
     { label: "Rekap Kelas Aktif", href: "/class-summary", icon: Clipboard },
-    { label: "Perhitungan Honor", href: "/salary", icon: Wallet },
+    { label: "Honor Saya", href: "/salary", icon: Wallet },
     { label: "Riwayat Pembayaran", href: "/salary", icon: Receipt },
   ]},
 ];

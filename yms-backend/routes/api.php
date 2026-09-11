@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\StudentProgressController;
 use App\Http\Controllers\Api\LearningNoteController;
 use App\Http\Controllers\Api\TeacherSalaryController;
+use App\Http\Controllers\Api\SalaryRuleController;
 use App\Http\Controllers\Api\ApprovalController;
 use Illuminate\Support\Facades\Route;
 
@@ -183,6 +184,10 @@ Route::prefix('v1')->group(function () {
     // Teacher Salaries
     Route::apiResource('teacher-salaries', TeacherSalaryController::class)->middleware('auth:sanctum');
     Route::get('/my-salary', [TeacherSalaryController::class, 'mySalary'])->middleware('auth:sanctum');
+
+    // Salary Rules (Master Honor Guru)
+    Route::apiResource('salary-rules', SalaryRuleController::class)->middleware('auth:sanctum');
+    Route::post('/salary-rules/calculate', [SalaryRuleController::class, 'calculate'])->middleware('auth:sanctum');
 
     // Teacher Class Summary
     Route::get('/teacher/class-summary', [DashboardController::class, 'teacherClassSummary'])->middleware('auth:sanctum');
