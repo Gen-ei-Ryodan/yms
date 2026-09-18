@@ -8,10 +8,9 @@ import axios from "axios";
 import {
   Loader2, TrendingUp, Users, GraduationCap, Calendar, DollarSign, Star,
   Clock, School, BookOpen, ShoppingCart, ArrowLeftRight, Plane, Gift,
-  CheckCircle, AlertCircle, XCircle, UserMinus, Receipt
+  CheckCircle, AlertCircle, XCircle, UserMinus, Receipt, Music2
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 
 interface DashboardData {
   students: {
@@ -91,111 +90,201 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64 bg-white/60 backdrop-blur-sm rounded-xl">
-          <div className="flex flex-col items-center gap-3">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <p className="text-sm text-gray-600 font-medium">Loading dashboard...</p>
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]"></div>
+              <Music2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-5 w-5 text-[#0B1526]" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat dashboard...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
           </div>
         </div>
       </MainLayout>
     );
   }
 
+  // ── TEACHER DASHBOARD ──
   if (user?.role === "teacher") {
     const d = data as any;
     return (
       <MainLayout>
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-6 text-white">
-            <h1 className="text-2xl font-bold">Halo, {user?.name} 👋</h1>
-            <p className="text-green-100 mt-1">Selamat mengajar hari ini</p>
+          {/* Welcome Banner */}
+          <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+            <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-white/5 rounded-full blur-xl" />
+            
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+                <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Panel Guru</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">Selamat Datang, {user?.name} 👋</h1>
+              <p className="text-white/60 text-lg">Siap mengajar dan memberikan yang terbaik hari ini?</p>
+            </div>
           </div>
 
+          {/* Stats Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg border border-gray-200 p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg"><Calendar className="h-5 w-5 text-blue-600" /></div>
-                <div>
-                  <p className="text-xs text-gray-400">Jadwal Hari Ini</p>
-                  <p className="text-2xl font-bold text-gray-900">{d?.today_classes_count || 0}</p>
-                  <p className="text-xs text-gray-400">Kelas</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg"><Users className="h-5 w-5 text-green-600" /></div>
-                <div>
-                  <p className="text-xs text-gray-400">Total Murid</p>
-                  <p className="text-2xl font-bold text-gray-900">{d?.total_students || 0}</p>
-                  <p className="text-xs text-gray-400">Siswa</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg"><BookOpen className="h-5 w-5 text-purple-600" /></div>
-                <div>
-                  <p className="text-xs text-gray-400">Kelas Aktif</p>
-                  <p className="text-2xl font-bold text-gray-900">{d?.active_classes_count || 0}</p>
-                  <p className="text-xs text-gray-400">Kelas</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-yellow-100 rounded-lg"><TrendingUp className="h-5 w-5 text-yellow-600" /></div>
-                <div>
-                  <p className="text-xs text-gray-400">Progress Murid</p>
-                  <p className="text-2xl font-bold text-gray-900">{d?.progress_rate || 0}%</p>
-                  <p className="text-xs text-gray-400">Kehadiran</p>
-                </div>
-              </div>
-            </div>
+            <StatCard
+              title="Jadwal Hari Ini"
+              value={d?.today_classes_count || 0}
+              icon={Calendar}
+              color="blue"
+              trend="up"
+              trendValue="+2 dari kemarin"
+            />
+            <StatCard
+              title="Total Murid"
+              value={d?.total_students || 0}
+              icon={Users}
+              color="green"
+            />
+            <StatCard
+              title="Kelas Aktif"
+              value={d?.active_classes_count || 0}
+              icon={School}
+              color="purple"
+            />
+            <StatCard
+              title="Tingkat Kehadiran"
+              value={`${d?.progress_rate || 0}%`}
+              icon={TrendingUp}
+              color="yellow"
+              trend="up"
+              trendValue="Meningkat"
+            />
           </div>
 
-          {/* Jadwal Hari Ini */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Jadwal Hari Ini</h2>
-            {d?.today_schedules?.length > 0 ? (
-              <div className="space-y-3">
-                {d.today_schedules.map((sched: any) => (
-                  <div key={sched.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                    <div className="text-center min-w-[60px]">
-                      <p className="text-xs text-gray-400">{sched.start_time?.slice(0, 5)}</p>
-                      <div className="w-0.5 h-6 bg-blue-300 mx-auto my-1"></div>
-                      <p className="text-xs text-gray-400">{sched.end_time?.slice(0, 5)}</p>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900">{sched.course} {sched.level}</p>
-                      <p className="text-sm text-gray-500">{sched.class_code} · {sched.room}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-blue-600">{sched.enrolled_count} Siswa</p>
+          {/* Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Jadwal Hari Ini - 2 columns */}
+            <div className="lg:col-span-2 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-[#0B1526]/5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-[#0B1526]">Jadwal Hari Ini</h2>
+                    <p className="text-sm text-[#8A93A3] mt-0.5">{d?.today_schedules?.length || 0} kelas terjadwal</p>
+                  </div>
+                  <a href="/my-schedule" className="text-sm font-medium text-[#0B1526] hover:text-[#C9A227] transition-colors">
+                    Lihat Semua →
+                  </a>
+                </div>
+              </div>
+              <div className="p-4">
+                {d?.today_schedules?.length > 0 ? (
+                  <div className="space-y-2">
+                    {d.today_schedules.slice(0, 4).map((sched: any) => (
+                      <div key={sched.id} className="flex items-center gap-4 p-4 bg-[#F5F2EB]/50 rounded-xl hover:bg-[#F5F2EB] transition-colors group">
+                        <div className="text-center min-w-[70px] bg-white rounded-lg p-2 shadow-sm">
+                          <p className="text-xs font-bold text-[#0B1526]">{sched.start_time?.slice(0, 5)}</p>
+                          <div className="w-full h-px bg-[#C9A227]/30 my-1" />
+                          <p className="text-xs font-bold text-[#0B1526]">{sched.end_time?.slice(0, 5)}</p>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-[#0B1526] truncate">{sched.course} {sched.level}</p>
+                          <p className="text-sm text-[#5B6472] truncate">{sched.class_code} · {sched.room}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#0B1526]/5 rounded-full text-xs font-semibold text-[#0B1526]">
+                            <Users className="h-3 w-3" />
+                            {sched.enrolled_count}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Calendar className="h-12 w-12 text-[#8A93A3] mx-auto mb-3" />
+                    <p className="text-[#5B6472] font-medium">Tidak ada jadwal hari ini</p>
+                    <p className="text-sm text-[#8A93A3]">Nikmati hari libur Anda</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Stats - 1 column */}
+            <div className="space-y-4">
+              <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm p-6">
+                <h3 className="text-sm font-bold text-[#0B1526] uppercase tracking-wide mb-4">Ringkasan</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-[#F5F2EB]/50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-[#2E7D5B]/10 rounded-lg flex items-center justify-center">
+                        <CheckCircle className="h-5 w-5 text-[#2E7D5B]" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#5B6472]">Hadir</p>
+                        <p className="font-bold text-[#0B1526]">{d?.total_students || 0}</p>
+                      </div>
                     </div>
                   </div>
-                ))}
+                  <div className="flex items-center justify-between p-3 bg-[#F5F2EB]/50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-[#C9A227]/10 rounded-lg flex items-center justify-center">
+                        <Star className="h-5 w-5 text-[#C9A227]" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#5B6472]">Total Kelas</p>
+                        <p className="font-bold text-[#0B1526]">{d?.active_classes_count || 0}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <p className="text-gray-400 text-sm">Tidak ada jadwal hari ini</p>
-            )}
+
+              {/* Motivational Card */}
+              <div className="bg-gradient-to-br from-[#C9A227] to-[#8F6F14] rounded-2xl p-6 text-white shadow-lg shadow-[#C9A227]/20">
+                <div className="flex items-start gap-3">
+                  <div className="h-10 w-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                    <Gift className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Semangat Mengajar!</h3>
+                    <p className="text-sm text-white/80 mt-1">Setiap lesson adalah kesempatan untuk menginspirasi</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Kelas Aktif */}
           {d?.active_classes?.length > 0 && (
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Kelas Aktif</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {d.active_classes.map((cls: any) => (
-                  <div key={cls.id} className="p-4 bg-gray-50 rounded-lg">
-                    <p className="font-semibold text-gray-900">{cls.course} {cls.level}</p>
-                    <p className="text-sm text-gray-500">{cls.class_code}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-gray-400">{cls.enrolled_count}/{cls.capacity} siswa</span>
-                      <a href={`/student-progress?class_id=${cls.id}`} className="text-xs text-blue-600 hover:underline">Lihat Detail →</a>
-                    </div>
+            <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-[#0B1526]/5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-[#0B1526]">Kelas Aktif</h2>
+                    <p className="text-sm text-[#8A93A3] mt-0.5">{d.active_classes.length} kelas aktif</p>
                   </div>
-                ))}
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {d.active_classes.map((cls: any) => (
+                    <div key={cls.id} className="p-4 bg-[#F5F2EB]/50 rounded-xl hover:bg-[#F5F2EB] transition-colors group">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <p className="font-semibold text-[#0B1526] group-hover:text-[#C9A227] transition-colors">{cls.course} {cls.level}</p>
+                          <p className="text-sm text-[#5B6472]">{cls.class_code}</p>
+                        </div>
+                        <School className="h-5 w-5 text-[#8A93A3]" />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-[#5B6472]">{cls.enrolled_count}/{cls.capacity} siswa</span>
+                        <a href={`/student-progress?class_id=${cls.id}`} className="text-xs font-medium text-[#0B1526] hover:text-[#C9A227] transition-colors">
+                          Lihat Detail →
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -204,152 +293,198 @@ export default function DashboardPage() {
     );
   }
 
+  // ── STUDENT DASHBOARD ──
   if (user?.role === "student") {
     const d = data as any;
     const classInfo = d?.current_class?.class;
-    const schedules = classInfo?.schedules || [];
     const nextSched = d?.next_schedule;
 
     return (
       <MainLayout>
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white">
-            <h1 className="text-2xl font-bold">Halo, {user?.name} 👋</h1>
-            <p className="text-blue-100 mt-1">Selamat datang di Yamaha Music School</p>
+          {/* Welcome Banner */}
+          <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+            
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+                <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Portal Siswa</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">Halo, {user?.name}! 👋</h1>
+              <p className="text-white/60 text-lg">Selamat datang di Yamaha Music School</p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Info Card */}
-            <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Kelas Aktif</p>
-                  <h2 className="text-xl font-bold text-gray-900 mt-1">
-                    {classInfo ? `${classInfo.course?.name} ${classInfo.level?.name}` : "Tidak ada kelas"}
-                  </h2>
-                  {classInfo && <p className="text-sm text-gray-500">{classInfo.class_code}</p>}
+            <div className="lg:col-span-2 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-[#0B1526]/5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-[#0B1526]">Kelas Aktif</h2>
+                    <p className="text-sm text-[#8A93A3] mt-0.5">Informasi kelas Anda</p>
+                  </div>
+                  <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-[#2E7D5B]/10 text-[#2E7D5B]">
+                    {d?.membership_status || "Active"}
+                  </span>
                 </div>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-                  {d?.membership_status || "Active"}
-                </span>
               </div>
 
-              {classInfo && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
+              <div className="p-6">
+                {classInfo ? (
                   <div>
-                    <p className="text-xs text-gray-400">Pengajar</p>
-                    <p className="text-sm font-semibold">{classInfo.teacher?.name || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Ruangan</p>
-                    <p className="text-sm font-semibold">{classInfo.room?.name || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Kapasitas</p>
-                    <p className="text-sm font-semibold">{classInfo.capacity} siswa</p>
-                  </div>
-                  {nextSched && (
-                    <div className="col-span-2 md:col-span-3">
-                      <p className="text-xs text-gray-400">Jadwal Berikutnya</p>
-                      <p className="text-sm font-semibold text-blue-600">
-                        {nextSched.day_of_week}, {nextSched.start_time} - {nextSched.end_time}
-                      </p>
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="h-14 w-14 bg-gradient-to-br from-[#0B1526] to-[#14233B] rounded-xl flex items-center justify-center shadow-lg">
+                        <Music2 className="h-7 w-7 text-[#C9A227]" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-[#0B1526]">
+                          {classInfo.course?.name} {classInfo.level?.name}
+                        </h3>
+                        <p className="text-[#5B6472]">{classInfo.class_code}</p>
+                      </div>
                     </div>
-                  )}
-                </div>
-              )}
 
-              {!classInfo && (
-                <p className="text-gray-400 text-sm mt-4">Anda belum terdaftar di kelas manapun.</p>
-              )}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="p-4 bg-[#F5F2EB]/50 rounded-xl">
+                        <p className="text-xs text-[#5B6472] font-medium mb-1">Pengajar</p>
+                        <p className="font-bold text-[#0B1526]">{classInfo.teacher?.name || "N/A"}</p>
+                      </div>
+                      <div className="p-4 bg-[#F5F2EB]/50 rounded-xl">
+                        <p className="text-xs text-[#5B6472] font-medium mb-1">Ruangan</p>
+                        <p className="font-bold text-[#0B1526]">{classInfo.room?.name || "N/A"}</p>
+                      </div>
+                      <div className="p-4 bg-[#F5F2EB]/50 rounded-xl">
+                        <p className="text-xs text-[#5B6472] font-medium mb-1">Kapasitas</p>
+                        <p className="font-bold text-[#0B1526]">{classInfo.capacity} siswa</p>
+                      </div>
+                      {nextSched && (
+                        <div className="col-span-2 md:col-span-3 p-4 bg-gradient-to-r from-[#C9A227]/10 to-[#C9A227]/5 rounded-xl border border-[#C9A227]/20">
+                          <p className="text-xs text-[#5B6472] font-medium mb-1">Jadwal Berikutnya</p>
+                          <p className="font-bold text-[#0B1526]">
+                            {nextSched.day_of_week}, {nextSched.start_time} - {nextSched.end_time}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <School className="h-12 w-12 text-[#8A93A3] mx-auto mb-3" />
+                    <p className="text-[#5B6472] font-medium">Belum terdaftar di kelas</p>
+                    <p className="text-sm text-[#8A93A3]">Hubungi admin untuk pendaftaran</p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Sidebar Stats */}
             <div className="space-y-4">
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
-                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Saldo Loyalty</p>
-                <p className="text-3xl font-bold text-yellow-500 mt-1">{d?.loyalty_points || 0}</p>
-                <p className="text-xs text-gray-400 mt-1">poin</p>
+              <div className="bg-gradient-to-br from-[#C9A227] to-[#8F6F14] rounded-2xl p-6 text-white shadow-lg shadow-[#C9A227]/20">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-10 w-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                    <Star className="h-5 w-5" />
+                  </div>
+                  <p className="font-semibold">Saldo Loyalty</p>
+                </div>
+                <p className="text-4xl font-bold mb-1">{d?.loyalty_points || 0}</p>
+                <p className="text-sm text-white/70">poin tersedia</p>
               </div>
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
-                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Tingkat Kehadiran</p>
-                <p className="text-3xl font-bold text-green-600 mt-1">{d?.attendance_rate || 0}%</p>
+
+              <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 bg-[#2E7D5B]/10 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-[#2E7D5B]" />
+                  </div>
+                  <p className="text-sm font-semibold text-[#0B1526]">Kehadiran</p>
+                </div>
+                <p className="text-3xl font-bold text-[#2E7D5B]">{d?.attendance_rate || 0}%</p>
               </div>
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
-                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Status Pembayaran</p>
-                <p className="text-sm font-bold mt-1">{d?.payment_status === "ACTIVE" ? "Lunas" : d?.payment_status || "N/A"}</p>
+
+              <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 bg-[#0B1526]/5 rounded-lg flex items-center justify-center">
+                    <DollarSign className="h-5 w-5 text-[#0B1526]" />
+                  </div>
+                  <p className="text-sm font-semibold text-[#0B1526]">Pembayaran</p>
+                </div>
+                <p className="text-lg font-bold text-[#0B1526]">
+                  {d?.payment_status === "ACTIVE" ? "✅ Lunas" : d?.payment_status || "N/A"}
+                </p>
               </div>
             </div>
           </div>
 
           {/* Shortcut Buttons */}
           <div>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Akses Cepat</h2>
+            <h2 className="text-lg font-bold text-[#0B1526] mb-4">Akses Cepat</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-              <a href="/requests" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all">
-                <Plane className="h-6 w-6 text-blue-600" />
-                <span className="text-xs font-medium text-gray-700 text-center">Ajukan Cuti</span>
-              </a>
-              <a href="/requests" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all">
-                <ArrowLeftRight className="h-6 w-6 text-purple-600" />
-                <span className="text-xs font-medium text-gray-700 text-center">Pindah Kelas</span>
-              </a>
-              <a href="/my-class" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all">
-                <Calendar className="h-6 w-6 text-green-600" />
-                <span className="text-xs font-medium text-gray-700 text-center">Lihat Jadwal</span>
-              </a>
-              <a href="/my-transactions" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
-                <Receipt className="h-6 w-6 text-orange-600" />
-                <span className="text-xs font-medium text-gray-700 text-center">Riwayat Pembayaran</span>
-              </a>
-              <a href="/attendance" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-yellow-300 hover:bg-yellow-50 transition-all">
-                <CheckCircle className="h-6 w-6 text-yellow-600" />
-                <span className="text-xs font-medium text-gray-700 text-center">Riwayat Absensi</span>
-              </a>
-              <a href="/rewards" className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all">
-                <Gift className="h-6 w-6 text-pink-600" />
-                <span className="text-xs font-medium text-gray-700 text-center">Reward</span>
-              </a>
+              {[
+                { href: "/requests", icon: Plane, label: "Ajukan Cuti", color: "from-[#0B1526] to-[#14233B]" },
+                { href: "/requests", icon: ArrowLeftRight, label: "Pindah Kelas", color: "from-[#4A1D96] to-[#351570]" },
+                { href: "/my-class", icon: Calendar, label: "Lihat Jadwal", color: "from-[#2E7D5B] to-[#1A5C3E]" },
+                { href: "/my-transactions", icon: Receipt, label: "Riwayat Bayar", color: "from-[#C2542E] to-[#A03D1F]" },
+                { href: "/attendance", icon: CheckCircle, label: "Absensi", color: "from-[#C9A227] to-[#8F6F14]" },
+                { href: "/rewards", icon: Gift, label: "Reward", color: "from-[#C2542E] to-[#A03D1F]" },
+              ].map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="group flex flex-col items-center gap-3 p-5 bg-white rounded-2xl border border-[#0B1526]/5 hover:border-transparent hover:shadow-lg transition-all duration-300"
+                >
+                  <div className={`h-12 w-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                    <item.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <span className="text-xs font-semibold text-[#0B1526] text-center leading-tight">{item.label}</span>
+                </a>
+              ))}
             </div>
           </div>
 
           {/* Progress Belajar */}
           {d?.progress && (
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="h-5 w-5 text-blue-600" />
-                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Progress Belajar</h2>
+            <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-[#0B1526]/5">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 bg-[#0B1526] rounded-lg flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-[#C9A227]" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-[#0B1526]">Progress Belajar</h2>
+                    <p className="text-sm text-[#8A93A3]">Perkembangan pembelajaran Anda</p>
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Program</span>
-                    <span className="font-semibold">{classInfo?.course?.name || "N/A"}</span>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    {[
+                      { label: "Program", value: classInfo?.course?.name || "N/A" },
+                      { label: "Level", value: d.progress.latest_level || classInfo?.level?.name || "N/A" },
+                      { label: "Lesson", value: `${d.progress.completed_lessons} / ${d.progress.total_lessons}` },
+                      ...(d.progress.latest_topic ? [{ label: "Materi Terakhir", value: d.progress.last_material || d.progress.latest_topic }] : []),
+                    ].map((item) => (
+                      <div key={item.label} className="flex items-center justify-between p-3 bg-[#F5F2EB]/50 rounded-xl">
+                        <span className="text-sm text-[#5B6472]">{item.label}</span>
+                        <span className="font-bold text-[#0B1526]">{item.value}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Level</span>
-                    <span className="font-semibold">{d.progress.latest_level || classInfo?.level?.name || "N/A"}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Lesson</span>
-                    <span className="font-semibold">{d.progress.completed_lessons} / {d.progress.total_lessons}</span>
-                  </div>
-                  {d.progress.latest_topic && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">Materi Terakhir</span>
-                      <span className="font-semibold text-blue-600">{d.progress.last_material || d.progress.latest_topic}</span>
+                  {d.progress.teacher_notes && (
+                    <div className="bg-gradient-to-br from-[#0B1526]/5 to-[#0B1526]/10 rounded-xl p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <BookOpen className="h-4 w-4 text-[#0B1526]" />
+                        <p className="text-xs text-[#5B6472] uppercase font-bold">Catatan Guru</p>
+                      </div>
+                      <p className="text-sm text-[#0B1526] leading-relaxed">{d.progress.teacher_notes}</p>
+                      {d.progress.teacher_feedback && (
+                        <p className="text-sm text-[#5B6472] mt-3 italic">&ldquo;{d.progress.teacher_feedback}&rdquo;</p>
+                      )}
                     </div>
                   )}
                 </div>
-                {d.progress.teacher_notes && (
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-xs text-gray-400 uppercase font-semibold mb-2">Catatan Guru</p>
-                    <p className="text-sm text-gray-700">{d.progress.teacher_notes}</p>
-                    {d.progress.teacher_feedback && (
-                      <p className="text-sm text-gray-500 mt-2 italic">"{d.progress.teacher_feedback}"</p>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -362,16 +497,31 @@ export default function DashboardPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard Admin</h1>
-          <p className="text-sm text-gray-500 mt-1">Overview of Yamaha Music School operations</p>
+        {/* Welcome Banner */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+              <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Admin Panel</span>
+            </div>
+            <h1 className="text-3xl font-bold mb-2">Dashboard Admin</h1>
+            <p className="text-white/60 text-lg">Overview of Yamaha Music School operations</p>
+          </div>
         </div>
 
         {data && (
           <>
             {/* ── SISWA ── */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Siswa</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-8 w-8 bg-[#0B1526] rounded-lg flex items-center justify-center">
+                  <GraduationCap className="h-4 w-4 text-[#C9A227]" />
+                </div>
+                <h2 className="text-lg font-bold text-[#0B1526]">Siswa</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard title="Total Siswa" value={data.students.total_students} icon={Users} color="blue" />
                 <StatCard title="Siswa Aktif" value={data.students.active_students} icon={GraduationCap} color="green" />
@@ -388,7 +538,12 @@ export default function DashboardPage() {
 
             {/* ── KELAS ── */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Kelas</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-8 w-8 bg-[#0B1526] rounded-lg flex items-center justify-center">
+                  <School className="h-4 w-4 text-[#C9A227]" />
+                </div>
+                <h2 className="text-lg font-bold text-[#0B1526]">Kelas</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard title="Total Kelas" value={data.classes.total_classes} icon={School} color="blue" />
                 <StatCard title="Kelas Aktif" value={data.classes.active_classes} icon={School} color="green" />
@@ -396,13 +551,13 @@ export default function DashboardPage() {
                 <StatCard title="Kelas Penuh" value={data.classes.full_classes} icon={AlertCircle} color="red" />
               </div>
               {Object.keys(data.classes.students_per_class).length > 0 && (
-                <div className="bg-white rounded-lg border border-gray-200 p-4 mt-4">
-                  <p className="text-sm font-semibold text-gray-500 mb-3">Jumlah Siswa per Kelas</p>
+                <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-5 mt-4 shadow-sm">
+                  <p className="text-sm font-bold text-[#0B1526] mb-4">Jumlah Siswa per Kelas</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {Object.entries(data.classes.students_per_class).map(([classId, count]) => (
-                      <div key={classId} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                        <span className="text-xs text-gray-500">Class #{classId}</span>
-                        <span className="text-sm font-bold text-blue-600">{count} siswa</span>
+                      <div key={classId} className="flex items-center justify-between p-3 bg-[#F5F2EB]/50 rounded-xl">
+                        <span className="text-sm text-[#5B6472]">Class #{classId}</span>
+                        <span className="text-sm font-bold text-[#0B1526]">{count} siswa</span>
                       </div>
                     ))}
                   </div>
@@ -412,7 +567,12 @@ export default function DashboardPage() {
 
             {/* ── ABSENSI ── */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Absensi</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-8 w-8 bg-[#0B1526] rounded-lg flex items-center justify-center">
+                  <CheckCircle className="h-4 w-4 text-[#C9A227]" />
+                </div>
+                <h2 className="text-lg font-bold text-[#0B1526]">Absensi</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard title="Hadir Hari Ini" value={data.attendance.present_today} icon={CheckCircle} color="green" />
                 <StatCard title="Alpha Hari Ini" value={data.attendance.absent_today} icon={XCircle} color="red" />
@@ -428,7 +588,12 @@ export default function DashboardPage() {
 
             {/* ── TRANSAKSI ── */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Transaksi</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-8 w-8 bg-[#0B1526] rounded-lg flex items-center justify-center">
+                  <DollarSign className="h-4 w-4 text-[#C9A227]" />
+                </div>
+                <h2 className="text-lg font-bold text-[#0B1526]">Transaksi</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard title="Pembayaran Hari Ini" value={formatCurrency(data.payment.today_revenue)} icon={DollarSign} color="green" />
                 <StatCard title="Pembelian Hari Ini" value={data.payment.today_purchases} icon={ShoppingCart} color="blue" />
@@ -443,7 +608,12 @@ export default function DashboardPage() {
 
             {/* ── LOYALTY ── */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Loyalty</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-8 w-8 bg-[#0B1526] rounded-lg flex items-center justify-center">
+                  <Star className="h-4 w-4 text-[#C9A227]" />
+                </div>
+                <h2 className="text-lg font-bold text-[#0B1526]">Loyalty</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard title="Total Poin" value={data.loyalty.total_points_issued} icon={Star} color="yellow" />
                 <StatCard title="Poin Digunakan" value={data.loyalty.points_redeemed} icon={Star} color="orange" />
@@ -454,7 +624,12 @@ export default function DashboardPage() {
 
             {/* ── APPROVALS ── */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Menunggu Persetujuan</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-8 w-8 bg-[#0B1526] rounded-lg flex items-center justify-center">
+                  <AlertCircle className="h-4 w-4 text-[#C9A227]" />
+                </div>
+                <h2 className="text-lg font-bold text-[#0B1526]">Menunggu Persetujuan</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard title="Total Pending" value={data.approvals.total_pending} icon={AlertCircle} color="orange" />
                 <StatCard title="Pengajuan Cuti" value={data.approvals.pending_leaves} icon={Plane} color="blue" />

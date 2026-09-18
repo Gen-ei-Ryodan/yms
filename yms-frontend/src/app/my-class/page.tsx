@@ -34,8 +34,14 @@ export default function MyClassPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]" />
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat kelas saya...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );
@@ -44,43 +50,52 @@ export default function MyClassPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 ">My Class</h1>
-          <p className="text-sm text-gray-500  mt-1">Your current class information</p>
+        {/* Gradient Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+              <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Kelas Saya</span>
+            </div>
+            <h1 className="text-3xl font-bold mb-2">Kelas Saya</h1>
+            <p className="text-white/60 text-lg">Informasi kelas aktif Anda</p>
+          </div>
         </div>
 
         {enrollment ? (
-          <div className="bg-white  rounded-lg border border-gray-200 p-6">
-            <div className="flex items-start justify-between mb-4">
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-6 shadow-sm">
+            <div className="flex items-start justify-between mb-6">
               <div>
-                <h3 className="text-xl font-bold">{enrollment.class?.course?.name}</h3>
-                <p className="text-gray-500">{enrollment.class?.class_code} · {enrollment.class?.level?.name}</p>
+                <h3 className="text-2xl font-bold text-[#0B1526]">{enrollment.class?.course?.name}</h3>
+                <p className="text-[#8A93A3]">{enrollment.class?.class_code} · {enrollment.class?.level?.name}</p>
               </div>
-              <Badge className="bg-green-100 text-green-800  ">Active</Badge>
+              <Badge className="bg-emerald-100 text-emerald-800 font-medium">Aktif</Badge>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-gray-400" />
-                <span className="text-sm">Teacher: {enrollment.class?.teacher?.name}</span>
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                <User className="h-5 w-5 text-[#C9A227]" />
+                <span className="text-sm font-medium text-[#0B1526]">Guru: {enrollment.class?.teacher?.name}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gray-400" />
-                <span className="text-sm">Room: {enrollment.class?.room?.name}</span>
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                <MapPin className="h-5 w-5 text-[#C9A227]" />
+                <span className="text-sm font-medium text-[#0B1526]">Ruangan: {enrollment.class?.room?.name}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-sm">Start: {enrollment.start_date}</span>
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                <Calendar className="h-5 w-5 text-[#C9A227]" />
+                <span className="text-sm font-medium text-[#0B1526]">Mulai: {enrollment.start_date}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-gray-400" />
-                <span className="text-sm">Capacity: {enrollment.class?.capacity}</span>
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                <BookOpen className="h-5 w-5 text-[#C9A227]" />
+                <span className="text-sm font-medium text-[#0B1526]">Kapasitas: {enrollment.class?.capacity}</span>
               </div>
             </div>
           </div>
         ) : (
-          <div className="bg-white  rounded-lg border border-gray-200 p-8 text-center">
-            <GraduationCap className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-500">No active class enrollment</p>
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-8 text-center shadow-sm">
+            <GraduationCap className="h-14 w-14 mx-auto text-[#8A93A3] mb-3" />
+            <p className="text-[#5B6472] font-medium">Belum ada kelas aktif</p>
           </div>
         )}
       </div>

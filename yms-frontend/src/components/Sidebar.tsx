@@ -193,26 +193,30 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm" onClick={onClose} />
       )}
       <aside className={cn(
-        "fixed left-0 top-0 z-40 h-screen w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out flex flex-col",
+        "fixed left-0 top-0 z-40 h-screen w-64 bg-[#0B1526] transition-transform duration-300 ease-in-out flex flex-col",
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        <div className="flex items-center gap-3 p-5 border-b border-gray-100">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-sm shadow-blue-200">
-            <Music2 className="h-5 w-5 text-white" />
+        {/* Logo */}
+        <div className="flex items-center gap-3 p-5 border-b border-white/10">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C9A227] shadow-lg shadow-[#C9A227]/20">
+            <Music2 className="h-5 w-5 text-[#0B1526]" />
           </div>
           <div>
-            <h2 className="font-bold text-base text-gray-900 tracking-tight">Yamaha</h2>
-            <p className="text-[11px] text-gray-500 font-medium">Music School</p>
+            <h2 className="font-bold text-base text-white tracking-tight">Yamaha</h2>
+            <p className="text-[11px] text-white/50 font-medium">Music School</p>
           </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-3 px-3">
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-3 px-3 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {isGrouped ? (
             <ul className="space-y-4">
               {(menu as MenuGroup[]).map((group, gi) => (
                 <li key={gi}>
                   {group.title && (
-                    <p className="px-3 mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">{group.title}</p>
+                    <p className="px-3 mb-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
+                      {group.title}
+                    </p>
                   )}
                   <ul className="space-y-0.5">
                     {group.items.map((item) => {
@@ -221,9 +225,14 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
                         <li key={item.href}>
                           <a href={item.href} className={cn(
                             "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150",
-                            isActive ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            isActive
+                              ? "bg-[#C9A227]/15 text-[#C9A227]"
+                              : "text-white/60 hover:bg-white/5 hover:text-white"
                           )}>
-                            <item.icon className={cn("h-[18px] w-[18px] flex-shrink-0", isActive ? "text-blue-600" : "text-gray-400")} />
+                            <item.icon className={cn(
+                              "h-[18px] w-[18px] flex-shrink-0",
+                              isActive ? "text-[#C9A227]" : "text-white/40"
+                            )} />
                             {item.label}
                           </a>
                         </li>
@@ -241,9 +250,14 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
                   <li key={item.href}>
                     <a href={item.href} className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
-                      isActive ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      isActive
+                        ? "bg-[#C9A227]/15 text-[#C9A227]"
+                        : "text-white/60 hover:bg-white/5 hover:text-white"
                     )}>
-                      <item.icon className={cn("h-[18px] w-[18px] flex-shrink-0", isActive ? "text-blue-600" : "text-gray-400")} />
+                      <item.icon className={cn(
+                        "h-[18px] w-[18px] flex-shrink-0",
+                        isActive ? "text-[#C9A227]" : "text-white/40"
+                      )} />
                       {item.label}
                     </a>
                   </li>
@@ -253,17 +267,21 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
           )}
         </nav>
 
-        <div className="p-4 border-t border-gray-100">
-          <a href="/profile" className="flex items-center gap-3 rounded-lg p-2 hover:bg-gray-50 transition-colors">
-            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
-              <span className="text-sm font-bold text-white">{user?.name?.charAt(0) || "U"}</span>
+        {/* User Profile & Logout */}
+        <div className="p-4 border-t border-white/10">
+          <a href="/profile" className="flex items-center gap-3 rounded-lg p-2 hover:bg-white/5 transition-colors">
+            <div className="h-9 w-9 rounded-full bg-[#C9A227] flex items-center justify-center shadow-lg shadow-[#C9A227]/20">
+              <span className="text-sm font-bold text-[#0B1526]">{user?.name?.charAt(0) || "U"}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">{user?.name || "User"}</p>
-              <p className="text-[11px] text-gray-500 capitalize font-medium">{role.replace("_", " ")}</p>
+              <p className="text-sm font-semibold text-white truncate">{user?.name || "User"}</p>
+              <p className="text-[11px] text-white/50 capitalize font-medium">{role.replace("_", " ")}</p>
             </div>
           </a>
-          <button onClick={logout} className="flex items-center gap-3 w-full rounded-lg p-2 mt-1 text-red-600 hover:bg-red-50 transition-colors text-sm font-medium">
+          <button
+            onClick={logout}
+            className="flex items-center gap-3 w-full rounded-lg p-2 mt-1 text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
+          >
             <LogOut className="h-4 w-4" />
             Logout
           </button>
