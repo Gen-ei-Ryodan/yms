@@ -8,8 +8,8 @@ import { Loader2, Calendar, CheckCircle, XCircle, MinusCircle } from "lucide-rea
 import { Badge } from "@/components/ui/badge";
 
 const STATUS_MAP: Record<string, { icon: string; label: string; color: string }> = {
-  PRESENT: { icon: "✓", label: "Hadir", color: "text-green-600" },
-  LATE: { icon: "✓", label: "Hadir", color: "text-yellow-600" },
+  PRESENT: { icon: "✓", label: "Hadir", color: "text-emerald-600" },
+  LATE: { icon: "✓", label: "Hadir", color: "text-amber-600" },
   ABSENT: { icon: "X", label: "Alpha", color: "text-red-600" },
   ON_LEAVE: { icon: "C", label: "Cuti", color: "text-orange-600" },
   HOLIDAY: { icon: "L", label: "Libur", color: "text-blue-600" },
@@ -60,8 +60,14 @@ export default function TeacherStudentAttendancePage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]" />
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat absensi murid...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );
@@ -70,52 +76,62 @@ export default function TeacherStudentAttendancePage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Absensi Murid</h1>
-          <p className="text-sm text-gray-500 mt-1">Lihat absensi murid berdasarkan kelas</p>
+        {/* Gradient Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+              <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Absensi Murid</span>
+            </div>
+            <h1 className="text-3xl font-bold mb-2">Absensi Murid</h1>
+            <p className="text-white/60 text-lg">Lihat absensi murid berdasarkan kelas</p>
+          </div>
         </div>
 
         {/* Class Tabs */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-2 shadow-sm flex gap-2 flex-wrap">
           {classes.map(c => (
             <button key={c.id} onClick={() => setSelectedClass(c.id)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${selectedClass === c.id ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedClass === c.id ? "bg-[#0B1526] text-white shadow-lg shadow-[#0B1526]/20" : "text-[#5B6472] hover:text-[#0B1526] hover:bg-[#F5F2EB]"}`}>
               {c.class_code}
             </button>
           ))}
         </div>
 
         {/* Date Picker */}
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700">Tanggal:</label>
+        <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm p-4 flex items-center gap-4">
+          <Calendar className="h-4 w-4 text-[#8A93A3]" />
+          <label className="text-sm font-medium text-[#0B1526]">Tanggal:</label>
           <input type="date" value={selectedDate} onChange={e => setSelectedDate(e.target.value)}
-            className="px-3 py-1.5 rounded-md border border-gray-300 text-sm" />
+            className="h-11 px-4 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30" />
         </div>
 
         {/* Legend */}
-        <div className="flex gap-4 text-sm">
-          <span className="flex items-center gap-1"><span className="text-green-600 font-bold">✓</span> Hadir</span>
-          <span className="flex items-center gap-1"><span className="text-red-600 font-bold">X</span> Alpha</span>
-          <span className="flex items-center gap-1"><span className="text-orange-600 font-bold">C</span> Cuti</span>
-          <span className="flex items-center gap-1"><span className="text-blue-600 font-bold">L</span> Libur</span>
-          <span className="flex items-center gap-1"><span className="text-purple-600 font-bold">I</span> Izin</span>
+        <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm p-4 flex gap-5 text-sm">
+          <span className="flex items-center gap-1.5"><span className="text-emerald-600 font-bold">✓</span> Hadir</span>
+          <span className="flex items-center gap-1.5"><span className="text-red-600 font-bold">X</span> Alpha</span>
+          <span className="flex items-center gap-1.5"><span className="text-orange-600 font-bold">C</span> Cuti</span>
+          <span className="flex items-center gap-1.5"><span className="text-blue-600 font-bold">L</span> Libur</span>
+          <span className="flex items-center gap-1.5"><span className="text-purple-600 font-bold">I</span> Izin</span>
         </div>
 
         {/* Attendance List */}
         {activeClass && (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b border-gray-200">
-              <h2 className="font-semibold text-gray-900">{activeClass.class_code}</h2>
-              <p className="text-sm text-gray-500">{activeClass.course?.name} {activeClass.level?.name}</p>
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
+            <div className="p-4 bg-[#F5F2EB] border-b border-[#0B1526]/5">
+              <h2 className="font-bold text-[#0B1526]">{activeClass.class_code}</h2>
+              <p className="text-sm text-[#8A93A3]">{activeClass.course?.name} {activeClass.level?.name}</p>
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="text-left p-3 font-medium w-8">#</th>
-                  <th className="text-left p-3 font-medium">Nama</th>
-                  <th className="text-center p-3 font-medium">Status</th>
-                  <th className="text-left p-3 font-medium">Waktu</th>
-                  <th className="text-left p-3 font-medium">Metode</th>
+                <tr className="bg-[#F5F2EB]/50">
+                  <th className="text-left p-4 font-semibold text-[#0B1526] w-8">#</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Nama</th>
+                  <th className="text-center p-4 font-semibold text-[#0B1526]">Status</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Waktu</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Metode</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,18 +139,18 @@ export default function TeacherStudentAttendancePage() {
                   const att = attendances.find((a: any) => a.student_id === enr.student_id);
                   const status = att ? STATUS_MAP[att.status] || { icon: "?", label: att.status, color: "text-gray-500" } : null;
                   return (
-                    <tr key={enr.student_id} className="border-t border-gray-200 hover:bg-gray-50">
-                      <td className="p-3 text-gray-500">{i + 1}</td>
-                      <td className="p-3 font-medium">{enr.student?.full_name}</td>
-                      <td className="p-3 text-center">
+                    <tr key={enr.student_id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
+                      <td className="p-4 text-[#5B6472]">{i + 1}</td>
+                      <td className="p-4 font-semibold text-[#0B1526]">{enr.student?.full_name}</td>
+                      <td className="p-4 text-center">
                         {status ? (
                           <span className={`text-lg font-bold ${status.color}`} title={status.label}>{status.icon}</span>
                         ) : (
-                          <span className="text-gray-300">–</span>
+                          <span className="text-[#8A93A3]">–</span>
                         )}
                       </td>
-                      <td className="p-3 text-gray-500">{att?.check_in || "–"}</td>
-                      <td className="p-3 text-gray-500">{att?.method || "–"}</td>
+                      <td className="p-4 text-[#5B6472]">{att?.check_in || "–"}</td>
+                      <td className="p-4 text-[#5B6472]">{att?.method || "–"}</td>
                     </tr>
                   );
                 })}

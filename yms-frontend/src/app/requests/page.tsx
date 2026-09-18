@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import MainLayout from "@/components/MainLayout";
 import { SlidePanel } from "@/components/SlidePanel";
 import axios from "axios";
-import { Loader2, Plus, Search, Eye, CheckCircle, XCircle, RefreshCw, Calendar } from "lucide-react";
+import { Loader2, Plus, Search, Eye, CheckCircle, XCircle, RefreshCw, Calendar, ArrowLeftRight, Plane } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -98,8 +98,14 @@ export default function RequestsPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]" />
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat pengajuan...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );
@@ -108,58 +114,74 @@ export default function RequestsPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Requests</h1>
-            <p className="text-sm text-gray-500 mt-1">Manage your requests</p>
+        {/* Gradient Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+                <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Pengajuan</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">Pengajuan Saya</h1>
+              <p className="text-white/60 text-lg">Kelola pengajuan pindah kelas dan cuti</p>
+            </div>
+            <Button onClick={() => tab === "transfers" ? setShowTransferForm(true) : setShowLeaveForm(true)} className="bg-[#C9A227] hover:bg-[#C9A227]/90 text-[#0B1526] font-semibold rounded-xl shadow-lg shadow-[#C9A227]/20">
+              <Plus className="h-4 w-4 mr-2" /> Ajukan Baru
+            </Button>
           </div>
-          <Button onClick={() => tab === "transfers" ? setShowTransferForm(true) : setShowLeaveForm(true)}>
-            <Plus className="h-4 w-4 mr-2" /> New Request
-          </Button>
         </div>
 
-        <div className="flex gap-2 border-b border-gray-200">
+        {/* Tab Bar */}
+        <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-1.5 shadow-sm flex gap-1">
           <button onClick={() => setTab("transfers")}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === "transfers" ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
-            Class Transfer ({transfers.filter(t => t.status === "PENDING").length})
+            className={`px-5 py-2.5 text-sm font-medium rounded-xl transition-all flex items-center gap-2 ${tab === "transfers" ? "bg-[#0B1526] text-white shadow-lg shadow-[#0B1526]/20" : "text-[#5B6472] hover:text-[#0B1526] hover:bg-[#F5F2EB]"}`}>
+            <ArrowLeftRight className="h-4 w-4" />
+            Pindah Kelas ({transfers.filter(t => t.status === "PENDING").length})
           </button>
           <button onClick={() => setTab("leaves")}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === "leaves" ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
-            Leave / Cuti ({leaves.filter(l => l.status === "PENDING").length})
+            className={`px-5 py-2.5 text-sm font-medium rounded-xl transition-all flex items-center gap-2 ${tab === "leaves" ? "bg-[#0B1526] text-white shadow-lg shadow-[#0B1526]/20" : "text-[#5B6472] hover:text-[#0B1526] hover:bg-[#F5F2EB]"}`}>
+            <Plane className="h-4 w-4" />
+            Cuti ({leaves.filter(l => l.status === "PENDING").length})
           </button>
         </div>
 
         {tab === "transfers" && (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-200">
+              <thead className="bg-[#F5F2EB]">
                 <tr>
-                  <th className="text-left p-3 font-medium">Dari</th>
-                  <th className="text-left p-3 font-medium">Ke</th>
-                  <th className="text-left p-3 font-medium">Alasan</th>
-                  <th className="text-left p-3 font-medium">Status</th>
-                  <th className="text-left p-3 font-medium">Tanggal</th>
-                  <th className="text-right p-3 font-medium">Aksi</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Dari</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Ke</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Alasan</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Status</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Tanggal</th>
+                  <th className="text-right p-4 font-semibold text-[#0B1526]">Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                {transfers.map((t) => (
-                  <tr key={t.id} className="border-t border-gray-200 hover:bg-gray-50">
-                    <td className="p-3 font-medium">{t.fromClass?.course?.name} - {t.fromClass?.level?.name}</td>
-                    <td className="p-3 text-gray-500">{t.toClass?.course?.name} - {t.toClass?.level?.name}</td>
-                    <td className="p-3 text-gray-500 max-w-xs truncate">{t.reason}</td>
-                    <td className="p-3"><Badge className={getStatusColor(t.status)}>{t.status}</Badge></td>
-                    <td className="p-3"><ClientDate date={t.requested_at} format="date" /></td>
-                    <td className="p-3 text-right">
-                      <Button variant="ghost" size="icon" onClick={() => { setSelectedItem(t); setShowPanel(true); }}><Eye className="h-4 w-4" /></Button>
+                {transfers.map((t, i) => (
+                  <tr key={t.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
+                    <td className="p-4 font-semibold text-[#0B1526]">{t.fromClass?.course?.name} - {t.fromClass?.level?.name}</td>
+                    <td className="p-4 text-[#5B6472]">{t.toClass?.course?.name} - {t.toClass?.level?.name}</td>
+                    <td className="p-4 text-[#5B6472] max-w-xs truncate">{t.reason}</td>
+                    <td className="p-4"><Badge className={`${getStatusColor(t.status)} font-medium`}>{t.status}</Badge></td>
+                    <td className="p-4 text-[#5B6472]"><ClientDate date={t.requested_at} format="date" /></td>
+                    <td className="p-4 text-right">
+                      <button onClick={() => { setSelectedItem(t); setShowPanel(true); }} className="p-2 rounded-lg hover:bg-[#C9A227]/10 text-[#8A93A3] hover:text-[#C9A227] transition-colors">
+                        <Eye className="h-4 w-4" />
+                      </button>
                       {t.status === "PENDING" && (
-                        <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleCancelTransfer(t.id)}><XCircle className="h-4 w-4" /></Button>
+                        <button onClick={() => handleCancelTransfer(t.id)} className="p-2 rounded-lg hover:bg-red-50 text-[#8A93A3] hover:text-red-500 transition-colors">
+                          <XCircle className="h-4 w-4" />
+                        </button>
                       )}
                     </td>
                   </tr>
                 ))}
                 {transfers.length === 0 && (
-                  <tr><td colSpan={6} className="p-8 text-center text-gray-500">Belum ada pengajuan pindah kelas</td></tr>
+                  <tr><td colSpan={6} className="p-8 text-center text-[#5B6472]">Belum ada pengajuan pindah kelas</td></tr>
                 )}
               </tbody>
             </table>
@@ -167,34 +189,38 @@ export default function RequestsPage() {
         )}
 
         {tab === "leaves" && (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-200">
+              <thead className="bg-[#F5F2EB]">
                 <tr>
-                  <th className="text-left p-3 font-medium">Tanggal Mulai</th>
-                  <th className="text-left p-3 font-medium">Tanggal Selesai</th>
-                  <th className="text-left p-3 font-medium">Alasan</th>
-                  <th className="text-left p-3 font-medium">Status</th>
-                  <th className="text-right p-3 font-medium">Aksi</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Tanggal Mulai</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Tanggal Selesai</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Alasan</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Status</th>
+                  <th className="text-right p-4 font-semibold text-[#0B1526]">Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                {leaves.map((l) => (
-                  <tr key={l.id} className="border-t border-gray-200 hover:bg-gray-50">
-                    <td className="p-3">{l.start_date}</td>
-                    <td className="p-3">{l.end_date}</td>
-                    <td className="p-3 text-gray-500 max-w-xs truncate">{l.reason}</td>
-                    <td className="p-3"><Badge className={getStatusColor(l.status)}>{l.status}</Badge></td>
-                    <td className="p-3 text-right">
-                      <Button variant="ghost" size="icon" onClick={() => { setSelectedItem(l); setShowPanel(true); }}><Eye className="h-4 w-4" /></Button>
+                {leaves.map((l, i) => (
+                  <tr key={l.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
+                    <td className="p-4 text-[#5B6472]">{l.start_date}</td>
+                    <td className="p-4 text-[#5B6472]">{l.end_date}</td>
+                    <td className="p-4 text-[#5B6472] max-w-xs truncate">{l.reason}</td>
+                    <td className="p-4"><Badge className={`${getStatusColor(l.status)} font-medium`}>{l.status}</Badge></td>
+                    <td className="p-4 text-right">
+                      <button onClick={() => { setSelectedItem(l); setShowPanel(true); }} className="p-2 rounded-lg hover:bg-[#C9A227]/10 text-[#8A93A3] hover:text-[#C9A227] transition-colors">
+                        <Eye className="h-4 w-4" />
+                      </button>
                       {l.status === "PENDING" && (
-                        <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleCancelLeave(l.id)}><XCircle className="h-4 w-4" /></Button>
+                        <button onClick={() => handleCancelLeave(l.id)} className="p-2 rounded-lg hover:bg-red-50 text-[#8A93A3] hover:text-red-500 transition-colors">
+                          <XCircle className="h-4 w-4" />
+                        </button>
                       )}
                     </td>
                   </tr>
                 ))}
                 {leaves.length === 0 && (
-                  <tr><td colSpan={5} className="p-8 text-center text-gray-500">Belum ada pengajuan cuti</td></tr>
+                  <tr><td colSpan={5} className="p-8 text-center text-[#5B6472]">Belum ada pengajuan cuti</td></tr>
                 )}
               </tbody>
             </table>
@@ -202,28 +228,55 @@ export default function RequestsPage() {
         )}
       </div>
 
-      <SlidePanel open={showPanel} onClose={() => setShowPanel(false)} title="Detail Request">
+      <SlidePanel open={showPanel} onClose={() => setShowPanel(false)} title="Detail Pengajuan">
         {selectedItem && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {tab === "transfers" ? (
-              <>
+              <div className="bg-[#F5F2EB] rounded-2xl p-5 border border-[#0B1526]/5">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><p className="text-xs text-gray-500">Dari Kelas</p><p className="font-medium">{selectedItem.fromClass?.course?.name} - {selectedItem.fromClass?.level?.name}</p></div>
-                  <div><p className="text-xs text-gray-500">Ke Kelas</p><p className="font-medium">{selectedItem.toClass?.course?.name} - {selectedItem.toClass?.level?.name}</p></div>
-                  <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedItem.status}</p></div>
-                  <div><p className="text-xs text-gray-500">Tanggal</p><p className="font-medium"><ClientDate date={selectedItem.requested_at} /></p></div>
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium mb-1">Dari Kelas</p>
+                    <p className="font-semibold text-[#0B1526]">{selectedItem.fromClass?.course?.name} - {selectedItem.fromClass?.level?.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium mb-1">Ke Kelas</p>
+                    <p className="font-semibold text-[#0B1526]">{selectedItem.toClass?.course?.name} - {selectedItem.toClass?.level?.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium mb-1">Status</p>
+                    <Badge className={`${getStatusColor(selectedItem.status)} font-medium`}>{selectedItem.status}</Badge>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium mb-1">Tanggal</p>
+                    <p className="font-semibold text-[#0B1526]"><ClientDate date={selectedItem.requested_at} /></p>
+                  </div>
                 </div>
-                <div><p className="text-xs text-gray-500">Alasan</p><p className="font-medium">{selectedItem.reason}</p></div>
-              </>
+                <div className="mt-4">
+                  <p className="text-xs text-[#8A93A3] font-medium mb-1">Alasan</p>
+                  <p className="font-semibold text-[#0B1526]">{selectedItem.reason}</p>
+                </div>
+              </div>
             ) : (
-              <>
+              <div className="bg-[#F5F2EB] rounded-2xl p-5 border border-[#0B1526]/5">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><p className="text-xs text-gray-500">Tanggal Mulai</p><p className="font-medium">{selectedItem.start_date}</p></div>
-                  <div><p className="text-xs text-gray-500">Tanggal Selesai</p><p className="font-medium">{selectedItem.end_date}</p></div>
-                  <div><p className="text-xs text-gray-500">Status</p><p className="font-medium">{selectedItem.status}</p></div>
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium mb-1">Tanggal Mulai</p>
+                    <p className="font-semibold text-[#0B1526]">{selectedItem.start_date}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium mb-1">Tanggal Selesai</p>
+                    <p className="font-semibold text-[#0B1526]">{selectedItem.end_date}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium mb-1">Status</p>
+                    <Badge className={`${getStatusColor(selectedItem.status)} font-medium`}>{selectedItem.status}</Badge>
+                  </div>
                 </div>
-                <div><p className="text-xs text-gray-500">Alasan</p><p className="font-medium">{selectedItem.reason}</p></div>
-              </>
+                <div className="mt-4">
+                  <p className="text-xs text-[#8A93A3] font-medium mb-1">Alasan</p>
+                  <p className="font-semibold text-[#0B1526]">{selectedItem.reason}</p>
+                </div>
+              </div>
             )}
           </div>
         )}
@@ -232,13 +285,13 @@ export default function RequestsPage() {
       <SlidePanel open={showTransferForm} onClose={() => setShowTransferForm(false)} title="Pengajuan Pindah Kelas" size="lg">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Kelas Saat Ini</label>
-            <p className="text-sm text-gray-700">{enrollment?.class?.course?.name} - {enrollment?.class?.level?.name} ({enrollment?.class?.class_code})</p>
+            <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Kelas Saat Ini</label>
+            <p className="text-sm text-[#5B6472] bg-[#F5F2EB] rounded-xl px-4 py-2.5">{enrollment?.class?.course?.name} - {enrollment?.class?.level?.name} ({enrollment?.class?.class_code})</p>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Pindah Ke Kelas</label>
+            <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Pindah Ke Kelas</label>
             <select value={transferData.to_class_id || ""} onChange={(e) => setTransferData({ ...transferData, to_class_id: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
+              className="w-full h-11 px-4 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30">
               <option value="">Pilih Kelas</option>
               {classes.filter((c: any) => c.id !== enrollment?.class_id).map((c: any) => (
                 <option key={c.id} value={c.id}>{c.class_code} - {c.course?.name} - {c.level?.name}</option>
@@ -246,18 +299,18 @@ export default function RequestsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Alasan *</label>
+            <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Alasan *</label>
             <textarea value={transferData.reason || ""} onChange={(e) => setTransferData({ ...transferData, reason: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 text-sm" rows={3} placeholder="Jelaskan alasan pindah kelas..." />
+              className="w-full px-4 py-3 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30" rows={3} placeholder="Jelaskan alasan pindah kelas..." />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Catatan Tambahan</label>
+            <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Catatan Tambahan</label>
             <textarea value={transferData.notes || ""} onChange={(e) => setTransferData({ ...transferData, notes: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 text-sm" rows={2} />
+              className="w-full px-4 py-3 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30" rows={2} />
           </div>
           <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={() => setShowTransferForm(false)}>Batal</Button>
-            <Button onClick={handleTransferSubmit}>Kirim Pengajuan</Button>
+            <Button variant="outline" onClick={() => setShowTransferForm(false)} className="rounded-xl border-[#0B1526]/10 hover:bg-[#F5F2EB]">Batal</Button>
+            <Button onClick={handleTransferSubmit} className="bg-[#C9A227] hover:bg-[#C9A227]/90 text-[#0B1526] font-semibold rounded-xl">Kirim Pengajuan</Button>
           </div>
         </div>
       </SlidePanel>
@@ -266,34 +319,30 @@ export default function RequestsPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Tanggal Mulai *</label>
-              <Input type="date" value={leaveData.start_date || ""} onChange={(e) => setLeaveData({ ...leaveData, start_date: e.target.value })} />
+              <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Tanggal Mulai *</label>
+              <Input type="date" value={leaveData.start_date || ""} onChange={(e) => setLeaveData({ ...leaveData, start_date: e.target.value })} className="h-11 rounded-xl bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Tanggal Selesai *</label>
-              <Input type="date" value={leaveData.end_date || ""} onChange={(e) => setLeaveData({ ...leaveData, end_date: e.target.value })} />
+              <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Tanggal Selesai *</label>
+              <Input type="date" value={leaveData.end_date || ""} onChange={(e) => setLeaveData({ ...leaveData, end_date: e.target.value })} className="h-11 rounded-xl bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Alasan *</label>
+            <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Alasan *</label>
             <textarea value={leaveData.reason || ""} onChange={(e) => setLeaveData({ ...leaveData, reason: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 text-sm" rows={3} placeholder="Jelaskan alasan cuti..." />
+              className="w-full px-4 py-3 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30" rows={3} placeholder="Jelaskan alasan cuti..." />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Catatan Tambahan</label>
+            <label className="block text-sm font-medium mb-1.5 text-[#0B1526]">Catatan Tambahan</label>
             <textarea value={leaveData.notes || ""} onChange={(e) => setLeaveData({ ...leaveData, notes: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-gray-300 text-sm" rows={2} />
+              className="w-full px-4 py-3 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30" rows={2} />
           </div>
           <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={() => setShowLeaveForm(false)}>Batal</Button>
-            <Button onClick={handleLeaveSubmit}>Kirim Pengajuan</Button>
+            <Button variant="outline" onClick={() => setShowLeaveForm(false)} className="rounded-xl border-[#0B1526]/10 hover:bg-[#F5F2EB]">Batal</Button>
+            <Button onClick={handleLeaveSubmit} className="bg-[#C9A227] hover:bg-[#C9A227]/90 text-[#0B1526] font-semibold rounded-xl">Kirim Pengajuan</Button>
           </div>
         </div>
       </SlidePanel>
     </MainLayout>
   );
-}
-
-function cn(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
 }

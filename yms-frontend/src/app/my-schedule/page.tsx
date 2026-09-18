@@ -50,8 +50,14 @@ export default function MySchedulePage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]" />
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat jadwal...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );
@@ -60,20 +66,29 @@ export default function MySchedulePage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Jadwal Mengajar</h1>
-          <p className="text-sm text-gray-500 mt-1">Jadwal mengajar Anda</p>
+        {/* Gradient Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+              <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Jadwal Mengajar</span>
+            </div>
+            <h1 className="text-3xl font-bold mb-2">Jadwal Mengajar</h1>
+            <p className="text-white/60 text-lg">Jadwal mengajar Anda</p>
+          </div>
         </div>
 
         {/* Day Tabs */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-2 shadow-sm flex gap-2 flex-wrap">
           <button onClick={() => setActiveDay("ALL")}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeDay === "ALL" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeDay === "ALL" ? "bg-[#0B1526] text-white shadow-lg shadow-[#0B1526]/20" : "text-[#5B6472] hover:text-[#0B1526] hover:bg-[#F5F2EB]"}`}>
             Semua
           </button>
           {groupedByDay.map(d => (
             <button key={d} onClick={() => setActiveDay(d)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeDay === d ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeDay === d ? "bg-[#0B1526] text-white shadow-lg shadow-[#0B1526]/20" : "text-[#5B6472] hover:text-[#0B1526] hover:bg-[#F5F2EB]"}`}>
               {DAY_LABELS[d] || d}
             </button>
           ))}
@@ -81,39 +96,39 @@ export default function MySchedulePage() {
 
         {/* Schedule Table */}
         {filtered.length > 0 ? (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-200">
+              <thead className="bg-[#F5F2EB]">
                 <tr>
-                  <th className="text-left p-3 font-medium">Hari</th>
-                  <th className="text-left p-3 font-medium">Jam</th>
-                  <th className="text-left p-3 font-medium">Kelas</th>
-                  <th className="text-left p-3 font-medium">Program</th>
-                  <th className="text-left p-3 font-medium">Ruangan</th>
-                  <th className="text-center p-3 font-medium">Murid</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Hari</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Jam</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Kelas</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Program</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526]">Ruangan</th>
+                  <th className="text-center p-4 font-semibold text-[#0B1526]">Murid</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((s) => (
-                  <tr key={s.id} className="border-t border-gray-200 hover:bg-gray-50">
-                    <td className="p-3 font-medium">{DAY_LABELS[s.day_of_week] || s.day_of_week}</td>
-                    <td className="p-3">
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-gray-400" />
+                {filtered.map((s, i) => (
+                  <tr key={s.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
+                    <td className="p-4 font-semibold text-[#0B1526]">{DAY_LABELS[s.day_of_week] || s.day_of_week}</td>
+                    <td className="p-4">
+                      <span className="flex items-center gap-1.5 text-[#5B6472]">
+                        <Clock className="h-3.5 w-3.5 text-[#C9A227]" />
                         {s.start_time?.slice(0, 5)} - {s.end_time?.slice(0, 5)}
                       </span>
                     </td>
-                    <td className="p-3 font-semibold">{s.class?.class_code}</td>
-                    <td className="p-3">{s.class?.course?.name} {s.class?.level?.name}</td>
-                    <td className="p-3">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3 text-gray-400" />
+                    <td className="p-4 font-bold text-[#0B1526]">{s.class?.class_code}</td>
+                    <td className="p-4 text-[#5B6472]">{s.class?.course?.name} {s.class?.level?.name}</td>
+                    <td className="p-4">
+                      <span className="flex items-center gap-1.5 text-[#5B6472]">
+                        <MapPin className="h-3.5 w-3.5 text-[#C9A227]" />
                         {s.class?.room?.name || "N/A"}
                       </span>
                     </td>
-                    <td className="p-3 text-center">
-                      <span className="flex items-center justify-center gap-1">
-                        <Users className="h-3 w-3 text-gray-400" />
+                    <td className="p-4 text-center">
+                      <span className="flex items-center justify-center gap-1.5 text-[#5B6472]">
+                        <Users className="h-3.5 w-3.5 text-[#C9A227]" />
                         {s.class?.enrollments_count ?? "–"}
                       </span>
                     </td>
@@ -123,9 +138,9 @@ export default function MySchedulePage() {
             </table>
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-            <Calendar className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-500">Tidak ada jadwal untuk hari ini</p>
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-8 text-center shadow-sm">
+            <Calendar className="h-14 w-14 mx-auto text-[#8A93A3] mb-3" />
+            <p className="text-[#5B6472] font-medium">Tidak ada jadwal untuk hari ini</p>
           </div>
         )}
       </div>

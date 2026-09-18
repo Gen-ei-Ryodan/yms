@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import MainLayout from "@/components/MainLayout";
 import axios from "axios";
-import { Loader2, GraduationCap, BookOpen, User, Clock } from "lucide-react";
+import { Loader2, GraduationCap, BookOpen, User, Clock, Users, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function MyClassesPage() {
@@ -32,8 +32,14 @@ export default function MyClassesPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]" />
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat kelas...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );
@@ -42,30 +48,45 @@ export default function MyClassesPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 ">My Classes</h1>
-          <p className="text-sm text-gray-500  mt-1">Classes assigned to you</p>
+        {/* Gradient Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+              <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Kelas Saya</span>
+            </div>
+            <h1 className="text-3xl font-bold mb-2">Kelas yang Ditugaskan</h1>
+            <p className="text-white/60 text-lg">Daftar kelas yang Anda ampu</p>
+          </div>
         </div>
 
         {classes.length === 0 ? (
-          <div className="bg-white  rounded-lg border border-gray-200 p-8 text-center">
-            <GraduationCap className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-500">No classes assigned</p>
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-8 text-center shadow-sm">
+            <GraduationCap className="h-14 w-14 mx-auto text-[#8A93A3] mb-3" />
+            <p className="text-[#5B6472] font-medium">Belum ada kelas ditugaskan</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {classes.map((c) => (
-              <div key={c.id} className="bg-white  rounded-lg border border-gray-200 p-4">
-                <div className="flex items-start justify-between">
+              <div key={c.id} className="bg-white rounded-2xl border border-[#0B1526]/5 p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="font-bold">{c.course?.name}</h3>
-                    <p className="text-sm text-gray-500">{c.class_code} · {c.level?.name}</p>
+                    <h3 className="text-lg font-bold text-[#0B1526]">{c.course?.name}</h3>
+                    <p className="text-sm text-[#8A93A3]">{c.class_code} · {c.level?.name}</p>
                   </div>
-                  <Badge className="bg-blue-100 text-blue-800  ">{c.status}</Badge>
+                  <Badge className="bg-blue-100 text-blue-800 font-medium">{c.status}</Badge>
                 </div>
-                <div className="mt-3 space-y-1 text-sm text-gray-500">
-                  <p className="flex items-center gap-1"><MapPin className="h-3 w-3" />{c.room?.name} (Cap: {c.capacity})</p>
-                  <p className="flex items-center gap-1"><Users className="h-3 w-3" />{c.enrolled_count || 0} students</p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-[#5B6472]">
+                    <MapPin className="h-4 w-4 text-[#C9A227]" />
+                    <span>{c.room?.name} (Cap: {c.capacity})</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-[#5B6472]">
+                    <Users className="h-4 w-4 text-[#C9A227]" />
+                    <span>{c.enrollments_count || 0} siswa</span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -74,12 +95,4 @@ export default function MyClassesPage() {
       </div>
     </MainLayout>
   );
-}
-
-function MapPin({ className }: { className?: string }) {
-  return <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>;
-}
-
-function Users({ className }: { className?: string }) {
-  return <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 8.292M15 21H3a4 4 0 01-4-4V5a4 4 0 014-4h8a4 4 0 014 4v8a4 4 0 01-4 4z" /></svg>;
 }

@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: hsl(0 0% 100%);
-  --color-foreground: hsl(222.2 84% 4.9%);
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(222.2 84% 4.9%);
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(222.2 84% 4.9%);
-  --color-primary: hsl(221.2 83.2% 53.3%);
-  --color-primary-foreground: hsl(210 40% 98%);
-  --color-secondary: hsl(210 40% 96%);
-  --color-secondary-foreground: hsl(222.2 84% 4.9%);
-  --color-muted: hsl(210 40% 96%);
-  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
-  --color-accent: hsl(210 40% 96%);
-  --color-accent-foreground: hsl(222.2 84% 4.9%);
-  --color-destructive: hsl(0 84.2% 60.2%);
-  --color-destructive-foreground: hsl(210 40% 98%);
-  --color-border: hsl(214.3 31.8% 91.4%);
-  --color-input: hsl(214.3 31.8% 91.4%);
-  --color-ring: hsl(221.2 83.2% 53.3%);
-  --radius: 0.5rem;
+  --color-ink: #0B1526;
+  --color-ink-50: #F0F2F5;
+  --color-ink-100: #D9DDE5;
+  --color-ink-200: #B3BBCA;
+  --color-ink-300: #8C99AF;
+  --color-ink-400: #667794;
+  --color-ink-500: #4A5A73;
+  --color-ink-600: #3A475C;
+  --color-ink-700: #2A3445;
+  --color-ink-800: #1A212E;
+  --color-ink-900: #0B1526;
+  --color-ink-soft: #14233B;
+  --color-ink-mute: #31415C;
+  --color-paper: #F5F2EB;
+  --color-paper-deep: #ECE7DB;
+  --color-gold: #C9A227;
+  --color-gold-50: #FBF6E4;
+  --color-gold-100: #F5E9BD;
+  --color-gold-200: #EDD88F;
+  --color-gold-300: #E6C65C;
+  --color-gold-400: #D9B53E;
+  --color-gold-500: #C9A227;
+  --color-gold-600: #A8851F;
+  --color-gold-700: #8F6F14;
+  --color-gold-800: #6B5310;
+  --color-gold-900: #4A3A0B;
+  --color-gold-light: #E6C65C;
+  --color-gold-deep: #8F6F14;
+  --color-ember: #C2542E;
+  --color-sage: #2E7D5B;
+  --color-slate: #5B6472;
+  --color-slate-soft: #8A93A3;
+
+  --color-background: #F5F2EB;
+  --color-foreground: #0B1526;
+  --color-card: #ffffff;
+  --color-card-foreground: #0B1526;
+  --color-primary: #C9A227;
+  --color-primary-foreground: #0B1526;
+  --color-secondary: #ECE7DB;
+  --color-secondary-foreground: #0B1526;
+  --color-muted: #ECE7DB;
+  --color-muted-foreground: #5B6472;
+  --color-accent: #ECE7DB;
+  --color-accent-foreground: #0B1526;
+  --color-destructive: #C2542E;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgba(11, 21, 38, 0.1);
+  --color-input: rgba(11, 21, 38, 0.12);
+  --color-ring: #C9A227;
+  --radius: 0.75rem;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --shadow-card: 0 24px 60px -20px rgba(11, 21, 38, 0.45);
+  --shadow-lift: 0 12px 30px -12px rgba(11, 21, 38, 0.35);
 }
 
 @layer base {
@@ -30,5 +68,6 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
   }
 }

@@ -3,9 +3,13 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import MainLayout from "@/components/MainLayout";
+import { StatCard } from "@/components/StatCard";
 import { SlidePanel } from "@/components/SlidePanel";
 import axios from "axios";
-import { Loader2, Plus, Search, Edit, Trash2, Eye, Filter, Download } from "lucide-react";
+import {
+  Loader2, Plus, Search, Edit, Trash2, Eye, Filter, Download,
+  BookOpen, Users, UserCheck, ChevronLeft, ChevronRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +38,7 @@ export default function TeachersPage() {
   useEffect(() => { fetchTeachers(); }, [search]);
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this teacher?")) {
+    if (confirm("Apakah Anda yakin ingin menghapus guru ini?")) {
       await axios.delete(`/teachers/${id}`);
       fetchTeachers();
     }
@@ -55,11 +59,23 @@ export default function TeachersPage() {
     }
   };
 
+  const totalTeachers = teachers.length;
+  const activeTeachers = teachers.filter(t => t.status === "ACTIVE").length;
+
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]"></div>
+              <BookOpen className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-5 w-5 text-[#0B1526]" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat data guru...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );
@@ -68,128 +84,270 @@ export default function TeachersPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 ">Teacher Management</h1>
-            <p className="text-sm text-gray-500  mt-1">Manage all teachers</p>
+        {/* Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+                <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Manajemen Guru</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">Teacher Management</h1>
+              <p className="text-white/60 text-lg">Kelola seluruh data guru Yamaha Music School</p>
+            </div>
+            <Button
+              onClick={() => { setFormData({}); setShowForm(true); }}
+              className="bg-[#C9A227] hover:bg-[#E6C65C] text-[#0B1526] font-semibold shadow-lg shadow-[#C9A227]/20"
+            >
+              <Plus className="h-4 w-4 mr-2" /> Tambah Guru
+            </Button>
           </div>
-          <Button onClick={() => { setFormData({}); setShowForm(true); }}>
-            <Plus className="h-4 w-4 mr-2" /> Add Teacher
-          </Button>
         </div>
 
-        <div className="flex gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input placeholder="Search teachers..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
-          </div>
-          <Button variant="outline"><Filter className="h-4 w-4 mr-2" /> Filter</Button>
-          <Button variant="outline"><Download className="h-4 w-4 mr-2" /> Export</Button>
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <StatCard title="Total Guru" value={totalTeachers} icon={Users} color="blue" />
+          <StatCard title="Guru Aktif" value={activeTeachers} icon={UserCheck} color="green" />
         </div>
 
-        <div className="bg-white  rounded-lg border border-gray-200 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="text-left p-3 font-medium">Teacher</th>
-                <th className="text-left p-3 font-medium">Code</th>
-                <th className="text-left p-3 font-medium">Specialization</th>
-                <th className="text-left p-3 font-medium">Status</th>
-                <th className="text-right p-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teachers.map((teacher) => (
-                <tr key={teacher.id} className="border-t border-gray-200 hover:bg-gray-100">
-                  <td className="p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span className="text-sm font-bold text-blue-600">
-                          {teacher.name?.charAt(0)}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium">{teacher.name}</p>
-                        <p className="text-xs text-gray-500">{teacher.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-3 font-mono text-xs">{teacher.teacher_code}</td>
-                  <td className="p-3">{teacher.specialization || "N/A"}</td>
-                  <td className="p-3"><Badge className={getStatusColor(teacher.status)}>{teacher.status}</Badge></td>
-                  <td className="p-3 text-right">
-                    <Button variant="ghost" size="icon" onClick={() => { setSelectedTeacher(teacher); setShowPanel(true); }}><Eye className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => { setFormData(teacher); setShowForm(true); }}><Edit className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(teacher.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
-                  </td>
+        {/* Search & Filters */}
+        <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm p-4">
+          <div className="flex gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8A93A3]" />
+              <Input
+                placeholder="Cari berdasarkan nama, email, atau spesialisasi..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-11 h-11 bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30"
+              />
+            </div>
+            <Button variant="outline" className="h-11 border-[#0B1526]/10 hover:bg-[#F5F2EB]">
+              <Filter className="h-4 w-4 mr-2" /> Filter
+            </Button>
+            <Button variant="outline" className="h-11 border-[#0B1526]/10 hover:bg-[#F5F2EB]">
+              <Download className="h-4 w-4 mr-2" /> Export
+            </Button>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm overflow-hidden">
+          <div className="p-4 border-b border-[#0B1526]/5">
+            <h2 className="text-lg font-bold text-[#0B1526]">Daftar Guru</h2>
+            <p className="text-sm text-[#8A93A3] mt-0.5">{teachers.length} guru terdaftar</p>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#0B1526]/5">
+                  <th className="text-left p-4 font-semibold text-[#0B1526] bg-[#F5F2EB]/30">Guru</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526] bg-[#F5F2EB]/30">Kode</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526] bg-[#F5F2EB]/30">Spesialisasi</th>
+                  <th className="text-left p-4 font-semibold text-[#0B1526] bg-[#F5F2EB]/30">Status</th>
+                  <th className="text-right p-4 font-semibold text-[#0B1526] bg-[#F5F2EB]/30">Aksi</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {teachers.map((teacher) => (
+                  <tr key={teacher.id} className="border-b border-[#0B1526]/5 hover:bg-[#F5F2EB]/30 transition-colors">
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-11 w-11 rounded-full bg-gradient-to-br from-[#0B1526] to-[#14233B] flex items-center justify-center shadow-sm">
+                          <span className="text-sm font-bold text-[#C9A227]">
+                            {teacher.name?.charAt(0)}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-[#0B1526]">{teacher.name}</p>
+                          <p className="text-xs text-[#8A93A3]">{teacher.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-4 font-mono text-xs text-[#5B6472] bg-[#F5F2EB]/20">{teacher.teacher_code}</td>
+                    <td className="p-4 text-[#5B6472]">{teacher.specialization || "N/A"}</td>
+                    <td className="p-4">
+                      <Badge className={getStatusColor(teacher.status)}>{teacher.status}</Badge>
+                    </td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-9 w-9 text-[#5B6472] hover:text-[#0B1526] hover:bg-[#0B1526]/5"
+                          onClick={() => { setSelectedTeacher(teacher); setShowPanel(true); }}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-9 w-9 text-[#5B6472] hover:text-[#C9A227] hover:bg-[#C9A227]/10"
+                          onClick={() => { setFormData(teacher); setShowForm(true); }}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-9 w-9 text-[#5B6472] hover:text-[#C2542E] hover:bg-[#C2542E]/10"
+                          onClick={() => handleDelete(teacher.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="p-4 border-t border-[#0B1526]/5 bg-[#F5F2EB]/20">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-[#5B6472]">
+                Menampilkan <span className="font-semibold text-[#0B1526]">{teachers.length}</span> dari <span className="font-semibold text-[#0B1526]">{teachers.length}</span> guru
+              </p>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="h-9 border-[#0B1526]/10" disabled>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="sm" className="h-9 border-[#0B1526]/10 bg-[#0B1526] text-white hover:bg-[#14233B]">
+                  1
+                </Button>
+                <Button variant="outline" size="sm" className="h-9 border-[#0B1526]/10" disabled>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <SlidePanel open={showPanel} onClose={() => setShowPanel(false)} title="Teacher Details" size="lg">
+      {/* Detail Slide Panel */}
+      <SlidePanel open={showPanel} onClose={() => setShowPanel(false)} title="Detail Guru" size="lg">
         {selectedTeacher && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-2xl font-bold text-blue-600">{selectedTeacher.name?.charAt(0)}</span>
+          <div className="space-y-6">
+            {/* Profile Header */}
+            <div className="flex items-center gap-4 p-4 bg-[#F5F2EB]/50 rounded-xl">
+              <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[#0B1526] to-[#14233B] flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-[#C9A227]">
+                  {selectedTeacher.name?.charAt(0)}
+                </span>
               </div>
               <div>
-                <h3 className="text-xl font-bold">{selectedTeacher.name}</h3>
-                <p className="text-gray-500">{selectedTeacher.teacher_code}</p>
+                <h3 className="text-xl font-bold text-[#0B1526]">{selectedTeacher.name}</h3>
+                <p className="text-[#5B6472] font-mono">{selectedTeacher.teacher_code}</p>
               </div>
             </div>
+
+            {/* Info Grid */}
             <div className="grid grid-cols-2 gap-4">
-              <div><p className="text-xs text-gray-500">Email</p><p className="font-medium">{selectedTeacher.email}</p></div>
-              <div><p className="text-xs text-gray-500">Phone</p><p className="font-medium">{selectedTeacher.phone || "N/A"}</p></div>
-              <div><p className="text-xs text-gray-500">Specialization</p><p className="font-medium">{selectedTeacher.specialization || "N/A"}</p></div>
-              <div><p className="text-xs text-gray-500">Join Date</p><p className="font-medium">{formatDate(selectedTeacher.join_date)}</p></div>
+              <div className="p-4 bg-white rounded-xl border border-[#0B1526]/5">
+                <p className="text-xs text-[#8A93A3] uppercase font-semibold mb-1">Email</p>
+                <p className="font-semibold text-[#0B1526]">{selectedTeacher.email}</p>
+              </div>
+              <div className="p-4 bg-white rounded-xl border border-[#0B1526]/5">
+                <p className="text-xs text-[#8A93A3] uppercase font-semibold mb-1">Telepon</p>
+                <p className="font-semibold text-[#0B1526]">{selectedTeacher.phone || "N/A"}</p>
+              </div>
+              <div className="p-4 bg-white rounded-xl border border-[#0B1526]/5">
+                <p className="text-xs text-[#8A93A3] uppercase font-semibold mb-1">Spesialisasi</p>
+                <p className="font-semibold text-[#0B1526]">{selectedTeacher.specialization || "N/A"}</p>
+              </div>
+              <div className="p-4 bg-white rounded-xl border border-[#0B1526]/5">
+                <p className="text-xs text-[#8A93A3] uppercase font-semibold mb-1">Tanggal Bergabung</p>
+                <p className="font-semibold text-[#0B1526]">{formatDate(selectedTeacher.join_date)}</p>
+              </div>
             </div>
           </div>
         )}
       </SlidePanel>
 
-      <SlidePanel open={showForm} onClose={() => setShowForm(false)} title={formData.id ? "Edit Teacher" : "Add Teacher"} size="lg">
-        <div className="space-y-4">
+      {/* Form Slide Panel */}
+      <SlidePanel open={showForm} onClose={() => setShowForm(false)} title={formData.id ? "Edit Guru" : "Tambah Guru"} size="lg">
+        <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Name</label>
-              <Input value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              <label className="block text-sm font-semibold text-[#0B1526] mb-2">Nama Lengkap</label>
+              <Input
+                value={formData.name || ""}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="h-11 bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <Input type="email" value={formData.email || ""} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+              <label className="block text-sm font-semibold text-[#0B1526] mb-2">Email</label>
+              <Input
+                type="email"
+                value={formData.email || ""}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="h-11 bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30"
+              />
             </div>
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Phone</label>
-              <Input value={formData.phone || ""} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+              <label className="block text-sm font-semibold text-[#0B1526] mb-2">Telepon</label>
+              <Input
+                value={formData.phone || ""}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="h-11 bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Specialization</label>
-              <Input value={formData.specialization || ""} onChange={(e) => setFormData({ ...formData, specialization: e.target.value })} />
+              <label className="block text-sm font-semibold text-[#0B1526] mb-2">Spesialisasi</label>
+              <Input
+                value={formData.specialization || ""}
+                onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
+                className="h-11 bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30"
+              />
             </div>
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Join Date</label>
-              <Input type="date" value={formData.join_date || ""} onChange={(e) => setFormData({ ...formData, join_date: e.target.value })} />
+              <label className="block text-sm font-semibold text-[#0B1526] mb-2">Tanggal Bergabung</label>
+              <Input
+                type="date"
+                value={formData.join_date || ""}
+                onChange={(e) => setFormData({ ...formData, join_date: e.target.value })}
+                className="h-11 bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Status</label>
-              <select value={formData.status || "ACTIVE"} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-sm">
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
+              <label className="block text-sm font-semibold text-[#0B1526] mb-2">Status</label>
+              <select
+                value={formData.status || "ACTIVE"}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                className="w-full h-11 px-4 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30"
+              >
+                <option value="ACTIVE">Aktif</option>
+                <option value="INACTIVE">Tidak Aktif</option>
               </select>
             </div>
           </div>
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
-            <Button onClick={handleSave}>Save</Button>
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-[#0B1526]/5">
+            <Button
+              variant="outline"
+              onClick={() => setShowForm(false)}
+              className="h-11 border-[#0B1526]/10 hover:bg-[#F5F2EB]"
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={handleSave}
+              className="h-11 bg-[#0B1526] hover:bg-[#14233B] text-white shadow-lg shadow-[#0B1526]/20"
+            >
+              {formData.id ? "Simpan Perubahan" : "Tambah Guru"}
+            </Button>
           </div>
         </div>
       </SlidePanel>

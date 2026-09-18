@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import MainLayout from "@/components/MainLayout";
 import axios from "axios";
-import { Loader2, Music, TrendingUp, Clock } from "lucide-react";
+import { Loader2, Music, TrendingUp, Clock, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function MyProgramPage() {
@@ -32,8 +32,14 @@ export default function MyProgramPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center h-96 bg-white rounded-2xl border border-[#0B1526]/5 shadow-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#0B1526]/10 border-t-[#C9A227]" />
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#0B1526]">Memuat program...</p>
+              <p className="text-xs text-[#8A93A3] mt-1">Mohon tunggu sebentar</p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );
@@ -44,68 +50,83 @@ export default function MyProgramPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Program & Level</h1>
-          <p className="text-sm text-gray-500 mt-1">Your enrolled program and level</p>
+        {/* Gradient Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#0B1526] via-[#14233B] to-[#0B1526] rounded-2xl p-8 text-white shadow-2xl shadow-[#0B1526]/30">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C9A227]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C9A227]/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-1 w-8 bg-[#C9A227] rounded-full" />
+              <span className="text-[#C9A227] text-sm font-semibold tracking-wide">Program & Level</span>
+            </div>
+            <h1 className="text-3xl font-bold mb-2">Program & Level</h1>
+            <p className="text-white/60 text-lg">Program dan level yang Anda ikuti</p>
+          </div>
         </div>
 
         {classInfo ? (
           <div className="space-y-4">
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <Music className="h-6 w-6 text-blue-600" />
+            {/* Program Card */}
+            <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-6 shadow-sm">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-14 w-14 rounded-2xl bg-[#0B1526] flex items-center justify-center shadow-lg">
+                    <Music className="h-7 w-7 text-[#C9A227]" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold">{classInfo.course?.name}</h3>
-                    <p className="text-sm text-gray-500">{classInfo.class_code}</p>
+                    <h3 className="text-2xl font-bold text-[#0B1526]">{classInfo.course?.name}</h3>
+                    <p className="text-[#8A93A3]">{classInfo.class_code}</p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800">Active</Badge>
+                <Badge className="bg-emerald-100 text-emerald-800 font-medium">Aktif</Badge>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="font-bold mb-3">Detail Program</h3>
+            {/* Detail Card */}
+            <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-6 shadow-sm">
+              <h3 className="font-bold text-[#0B1526] mb-4">Detail Program</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2">
-                  <Music className="h-4 w-4 text-gray-400" />
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                  <Music className="h-5 w-5 text-[#C9A227]" />
                   <div>
-                    <p className="text-xs text-gray-400">Program</p>
-                    <p className="font-medium">{classInfo.course?.name}</p>
+                    <p className="text-xs text-[#8A93A3] font-medium">Program</p>
+                    <p className="font-semibold text-[#0B1526]">{classInfo.course?.name}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-gray-400" />
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                  <TrendingUp className="h-5 w-5 text-[#C9A227]" />
                   <div>
-                    <p className="text-xs text-gray-400">Level</p>
-                    <p className="font-medium">{classInfo.level?.name}</p>
+                    <p className="text-xs text-[#8A93A3] font-medium">Level</p>
+                    <p className="font-semibold text-[#0B1526]">{classInfo.level?.name}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-gray-400" />
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                  <Clock className="h-5 w-5 text-[#C9A227]" />
                   <div>
-                    <p className="text-xs text-gray-400">Durasi Sesi</p>
-                    <p className="font-medium">{classInfo.course?.duration} menit</p>
+                    <p className="text-xs text-[#8A93A3] font-medium">Durasi Sesi</p>
+                    <p className="font-semibold text-[#0B1526]">{classInfo.course?.duration} menit</p>
                   </div>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-400">Harga</p>
-                  <p className="font-medium">Rp {Number(classInfo.course?.price || 0).toLocaleString()}</p>
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F2EB]/50">
+                  <DollarSign className="h-5 w-5 text-[#C9A227]" />
+                  <div>
+                    <p className="text-xs text-[#8A93A3] font-medium">Harga</p>
+                    <p className="font-semibold text-[#0B1526]">Rp {Number(classInfo.course?.price || 0).toLocaleString()}</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="font-bold mb-3">Deskripsi Program</h3>
-              <p className="text-sm text-gray-600">{classInfo.course?.description || "Tidak ada deskripsi"}</p>
+            {/* Description */}
+            <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-6 shadow-sm">
+              <h3 className="font-bold text-[#0B1526] mb-3">Deskripsi Program</h3>
+              <p className="text-sm text-[#5B6472]">{classInfo.course?.description || "Tidak ada deskripsi"}</p>
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-            <Music className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-500">Belum terdaftar di program manapun</p>
+          <div className="bg-white rounded-2xl border border-[#0B1526]/5 p-8 text-center shadow-sm">
+            <Music className="h-14 w-14 mx-auto text-[#8A93A3] mb-3" />
+            <p className="text-[#5B6472] font-medium">Belum terdaftar di program manapun</p>
           </div>
         )}
       </div>
