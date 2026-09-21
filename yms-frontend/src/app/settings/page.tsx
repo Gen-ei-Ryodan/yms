@@ -29,6 +29,7 @@ export default function SettingsPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [settings, setSettings] = useState<Setting[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userSearch, setUserSearch] = useState("");
 
   const fetchData = async () => {
     try {
@@ -140,6 +141,8 @@ export default function SettingsPage() {
                         placeholder="Search users..."
                         className="pl-10 w-64 h-10 rounded-xl"
                         style={{ borderColor: "rgba(11, 21, 38, 0.1)" }}
+                        value={userSearch}
+                        onChange={(e) => setUserSearch(e.target.value)}
                       />
                     </div>
                   </div>
@@ -157,7 +160,15 @@ export default function SettingsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((u: User) => (
+                    {users.filter((u) => {
+                      if (!userSearch) return true;
+                      const q = userSearch.toLowerCase();
+                      return (
+                        u.name?.toLowerCase().includes(q) ||
+                        u.email?.toLowerCase().includes(q) ||
+                        u.role?.toLowerCase().includes(q)
+                      );
+                    }).map((u: User) => (
                       <tr
                         key={u.id}
                         className="transition-colors duration-150 hover:shadow-sm"

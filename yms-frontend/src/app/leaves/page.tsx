@@ -67,6 +67,18 @@ export default function LeavesPage() {
     }
   };
 
+  const filteredLeaves = leaves.filter((l) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      l.student?.full_name?.toLowerCase().includes(q) ||
+      l.reason?.toLowerCase().includes(q) ||
+      l.start_date?.includes(q) ||
+      l.end_date?.includes(q) ||
+      l.status?.toLowerCase().includes(q)
+    );
+  });
+
   const pendingCount = leaves.filter(l => l.status === "PENDING").length;
   const approvedCount = leaves.filter(l => l.status === "APPROVED").length;
   const rejectedCount = leaves.filter(l => l.status === "REJECTED").length;
@@ -160,7 +172,7 @@ export default function LeavesPage() {
               </tr>
             </thead>
             <tbody>
-              {leaves.map((l, i) => (
+              {filteredLeaves.map((l, i) => (
                 <tr key={l.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4">
                     <div className="flex items-center gap-3">

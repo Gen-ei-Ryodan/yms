@@ -61,6 +61,16 @@ export default function TeacherAttendancePage() {
     }
   };
 
+  const filteredAttendances = attendances.filter((a) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      a.teacher?.name?.toLowerCase().includes(q) ||
+      a.date?.includes(q) ||
+      a.status?.toLowerCase().includes(q)
+    );
+  });
+
   const todayCount = attendances.filter(a => a.date === new Date().toISOString().split("T")[0]).length;
   const presentCount = attendances.filter(a => a.status === "PRESENT").length;
   const lateCount = attendances.filter(a => a.status === "LATE").length;
@@ -153,7 +163,7 @@ export default function TeacherAttendancePage() {
               </tr>
             </thead>
             <tbody>
-              {attendances.map((a, i) => (
+              {filteredAttendances.map((a, i) => (
                 <tr key={a.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4">
                     <div className="flex items-center gap-3">

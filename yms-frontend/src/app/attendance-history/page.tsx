@@ -38,6 +38,17 @@ export default function AttendanceHistoryPage() {
     }
   };
 
+  const filteredAttendances = attendances.filter((a) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      a.student?.full_name?.toLowerCase().includes(q) ||
+      a.class?.course?.name?.toLowerCase().includes(q) ||
+      a.attendance_date?.includes(q) ||
+      a.status?.toLowerCase().includes(q)
+    );
+  });
+
   useEffect(() => { fetchHistory(); }, [filterMonth, filterStatus]);
 
   if (loading) {
@@ -108,7 +119,7 @@ export default function AttendanceHistoryPage() {
               </tr>
             </thead>
             <tbody>
-              {attendances.map((a, i) => (
+              {filteredAttendances.map((a, i) => (
                 <tr key={a.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4 text-[#5B6472]">{a.attendance_date}</td>
                   <td className="p-4">

@@ -59,6 +59,18 @@ export default function EnrollmentsPage() {
     }
   };
 
+  const filteredEnrollments = enrollments.filter((e) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      e.student?.full_name?.toLowerCase().includes(q) ||
+      e.class?.class_code?.toLowerCase().includes(q) ||
+      e.class?.course?.name?.toLowerCase().includes(q) ||
+      e.start_date?.includes(q) ||
+      e.status?.toLowerCase().includes(q)
+    );
+  });
+
   const activeCount = enrollments.filter(e => e.status === "ACTIVE").length;
 
   if (loading) {
@@ -150,7 +162,7 @@ export default function EnrollmentsPage() {
               </tr>
             </thead>
             <tbody>
-              {enrollments.map((e, i) => (
+              {filteredEnrollments.map((e, i) => (
                 <tr key={e.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4">
                     <div className="flex items-center gap-3">

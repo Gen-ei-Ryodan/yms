@@ -55,6 +55,19 @@ export default function SchedulesPage() {
     }
   };
 
+  const filteredSchedules = schedules.filter((s) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      s.day_of_week?.toLowerCase().includes(q) ||
+      s.class?.course?.name?.toLowerCase().includes(q) ||
+      s.teacher?.name?.toLowerCase().includes(q) ||
+      s.room?.name?.toLowerCase().includes(q) ||
+      s.start_time?.includes(q) ||
+      s.end_time?.includes(q)
+    );
+  });
+
   const totalSchedules = schedules.length;
   const activeSchedules = schedules.filter(s => s.status === "ACTIVE").length;
 
@@ -145,7 +158,7 @@ export default function SchedulesPage() {
                 </tr>
               </thead>
               <tbody>
-                {schedules.map((s) => (
+                {filteredSchedules.map((s) => (
                   <tr key={s.id} className="border-b border-[#0B1526]/5 hover:bg-[#F5F2EB]/30 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
@@ -212,7 +225,7 @@ export default function SchedulesPage() {
           <div className="p-4 border-t border-[#0B1526]/5 bg-[#F5F2EB]/20">
             <div className="flex items-center justify-between">
               <p className="text-sm text-[#5B6472]">
-                Menampilkan <span className="font-semibold text-[#0B1526]">{schedules.length}</span> dari <span className="font-semibold text-[#0B1526]">{schedules.length}</span> jadwal
+                Menampilkan <span className="font-semibold text-[#0B1526]">{filteredSchedules.length}</span> dari <span className="font-semibold text-[#0B1526]">{schedules.length}</span> jadwal
               </p>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" className="h-9 border-[#0B1526]/10" disabled>

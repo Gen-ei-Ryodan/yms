@@ -61,6 +61,17 @@ export default function RedemptionsPage() {
     fetchRedemptions();
   };
 
+  const filteredRedemptions = redemptions.filter((r) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      r.redemption_number?.toLowerCase().includes(q) ||
+      r.student?.full_name?.toLowerCase().includes(q) ||
+      r.reward?.name?.toLowerCase().includes(q) ||
+      r.status?.toLowerCase().includes(q)
+    );
+  });
+
   if (loading) {
     return (
       <MainLayout>
@@ -121,7 +132,7 @@ export default function RedemptionsPage() {
               </tr>
             </thead>
             <tbody>
-              {redemptions.map((r, i) => (
+              {filteredRedemptions.map((r, i) => (
                 <tr key={r.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4 font-mono text-xs text-[#0B1526]">{r.redemption_number}</td>
                   <td className="p-4 font-semibold text-[#0B1526]">{r.student?.full_name}</td>

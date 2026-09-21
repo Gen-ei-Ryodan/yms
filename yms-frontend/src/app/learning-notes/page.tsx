@@ -68,6 +68,17 @@ export default function LearningNotesPage() {
     }
   };
 
+  const filteredNotes = notes.filter((n) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      n.student?.full_name?.toLowerCase().includes(q) ||
+      n.topic?.toLowerCase().includes(q) ||
+      n.class?.course?.name?.toLowerCase().includes(q) ||
+      n.note_date?.includes(q)
+    );
+  });
+
   if (loading) {
     return (
       <MainLayout>
@@ -136,7 +147,7 @@ export default function LearningNotesPage() {
               </tr>
             </thead>
             <tbody>
-              {notes.map((n, i) => (
+              {filteredNotes.map((n, i) => (
                 <tr key={n.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4 text-[#5B6472]"><ClientDate date={n.note_date} format="date" /></td>
                   <td className="p-4">

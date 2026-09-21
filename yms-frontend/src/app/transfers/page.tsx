@@ -58,6 +58,18 @@ export default function TransfersPage() {
     }
   };
 
+  const filteredTransfers = transfers.filter((t) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      t.student?.full_name?.toLowerCase().includes(q) ||
+      t.fromClass?.course?.name?.toLowerCase().includes(q) ||
+      t.toClass?.course?.name?.toLowerCase().includes(q) ||
+      t.reason?.toLowerCase().includes(q) ||
+      t.status?.toLowerCase().includes(q)
+    );
+  });
+
   const pendingCount = transfers.filter(t => t.status === "PENDING").length;
   const approvedCount = transfers.filter(t => t.status === "APPROVED").length;
   const rejectedCount = transfers.filter(t => t.status === "REJECTED").length;
@@ -151,7 +163,7 @@ export default function TransfersPage() {
               </tr>
             </thead>
             <tbody>
-              {transfers.map((t, i) => (
+              {filteredTransfers.map((t, i) => (
                 <tr key={t.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4">
                     <div className="flex items-center gap-3">

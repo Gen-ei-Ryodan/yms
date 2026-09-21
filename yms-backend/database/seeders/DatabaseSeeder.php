@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        $password = Hash::make('password');
+        $password = 'password';
         $now = now();
         $today = $now->toDateString();
 

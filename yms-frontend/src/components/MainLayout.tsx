@@ -1,15 +1,131 @@
 "use client";
 
-import { useState } from "react";
-import { Bell, Menu, Music2, Search } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Bell, Menu, Music2, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sidebar } from "./Sidebar";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+
+interface SearchItem {
+  label: string;
+  href: string;
+  group: string;
+}
+
+const searchMenus: Record<string, SearchItem[]> = {
+  super_admin: [
+    { label: "Dashboard", href: "/dashboard", group: "Menu" },
+    { label: "Siswa", href: "/students", group: "Master Data" },
+    { label: "Orang Tua / Wali", href: "/guardians", group: "Master Data" },
+    { label: "Guru", href: "/teachers", group: "Master Data" },
+    { label: "Program", href: "/courses", group: "Master Data" },
+    { label: "Level", href: "/levels", group: "Master Data" },
+    { label: "Kelas", href: "/classes", group: "Master Data" },
+    { label: "Jadwal", href: "/schedules", group: "Master Data" },
+    { label: "Ruangan", href: "/rooms", group: "Master Data" },
+    { label: "Produk", href: "/tuition", group: "Master Data" },
+    { label: "Pengaturan Loyalty", href: "/loyalty", group: "Master Data" },
+    { label: "Reward", href: "/rewards", group: "Master Data" },
+    { label: "Voucher", href: "/vouchers", group: "Master Data" },
+    { label: "Pengaturan", href: "/settings", group: "Master Data" },
+    { label: "Pendaftaran Siswa", href: "/students/register", group: "Student Management" },
+    { label: "Status Siswa", href: "/students/status", group: "Student Management" },
+    { label: "Riwayat Siswa", href: "/students/history", group: "Student Management" },
+    { label: "Absensi", href: "/attendance", group: "Attendance" },
+    { label: "Riwayat Absensi", href: "/admin/attendance-history", group: "Attendance" },
+    { label: "Absensi Guru", href: "/teacher-attendance", group: "Attendance" },
+    { label: "Cuti / Libur", href: "/leaves", group: "Attendance" },
+    { label: "Pindah Kelas", href: "/transfers", group: "Attendance" },
+    { label: "Approval", href: "/approvals", group: "Attendance" },
+    { label: "Pembayaran Les", href: "/payments", group: "Transaction" },
+    { label: "Pembelian Produk", href: "/product-purchases", group: "Transaction" },
+    { label: "Riwayat Transaksi", href: "/transaction-history", group: "Transaction" },
+    { label: "Langganan", href: "/subscriptions", group: "Transaction" },
+    { label: "Invoice", href: "/invoices", group: "Transaction" },
+    { label: "Enrollment", href: "/enrollments", group: "Transaction" },
+    { label: "Penukaran Poin", href: "/redemptions", group: "Loyalty" },
+    { label: "Saldo Poin", href: "/loyalty", group: "Loyalty" },
+    { label: "Kelas Guru", href: "/teacher-classes", group: "Guru" },
+    { label: "Progress Murid", href: "/student-progress", group: "Guru" },
+    { label: "Catatan Pembelajaran", href: "/learning-notes", group: "Guru" },
+    { label: "Honor / Gaji", href: "/salary", group: "Guru" },
+    { label: "Laporan Siswa", href: "/reports", group: "Laporan" },
+    { label: "Laporan Pembelian", href: "/reports/purchases", group: "Laporan" },
+    { label: "Laporan Guru", href: "/reports/teachers", group: "Laporan" },
+  ],
+  admin: [
+    { label: "Dashboard", href: "/dashboard", group: "Menu" },
+    { label: "Siswa", href: "/students", group: "Master Data" },
+    { label: "Guru", href: "/teachers", group: "Master Data" },
+    { label: "Kelas", href: "/classes", group: "Master Data" },
+    { label: "Jadwal", href: "/schedules", group: "Master Data" },
+    { label: "Enrollment", href: "/enrollments", group: "Transaction" },
+    { label: "Pembayaran", href: "/payments", group: "Transaction" },
+    { label: "Absensi", href: "/attendance", group: "Attendance" },
+  ],
+  teacher: [
+    { label: "Dashboard", href: "/dashboard", group: "Menu" },
+    { label: "Jadwal Hari Ini", href: "/teacher-schedule", group: "Jadwal" },
+    { label: "Jadwal Mingguan", href: "/my-schedule", group: "Jadwal" },
+    { label: "Kelas Aktif", href: "/my-classes", group: "Kelas" },
+    { label: "Daftar Murid", href: "/teacher/my-students", group: "Murid" },
+    { label: "Progress Murid", href: "/student-progress", group: "Murid" },
+    { label: "Absensi Murid", href: "/teacher/student-attendance", group: "Absensi" },
+    { label: "Catatan Pembelajaran", href: "/learning-notes", group: "Murid" },
+    { label: "Honor Saya", href: "/salary", group: "Honor" },
+  ],
+  student: [
+    { label: "Dashboard", href: "/dashboard", group: "Menu" },
+    { label: "Data Saya", href: "/profile", group: "Profil" },
+    { label: "Kelas Aktif", href: "/my-class", group: "Kelas" },
+    { label: "Jadwal", href: "/my-class/schedule", group: "Kelas" },
+    { label: "Progress Belajar", href: "/progress", group: "Kelas" },
+    { label: "Absensi Saya", href: "/attendance", group: "Absensi" },
+    { label: "Pembayaran Les", href: "/my-payments", group: "Transaksi" },
+    { label: "Invoice", href: "/my-invoices", group: "Transaksi" },
+    { label: "Saldo Poin", href: "/loyalty", group: "Loyalty" },
+    { label: "Reward", href: "/rewards", group: "Loyalty" },
+  ],
+  parent: [
+    { label: "Dashboard", href: "/dashboard", group: "Menu" },
+    { label: "Data Saya", href: "/profile", group: "Profil" },
+    { label: "Kelas Aktif", href: "/my-class", group: "Kelas" },
+    { label: "Absensi", href: "/attendance", group: "Absensi" },
+    { label: "Pembayaran", href: "/my-payments", group: "Transaksi" },
+  ],
+};
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const { user, loading } = useAuth();
+  const router = useRouter();
+  const searchRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        searchInputRef.current?.blur();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   if (loading) {
     return (
@@ -23,6 +139,26 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }
 
   const role = user?.role || "student";
+  const menus = searchMenus[role] || searchMenus.student;
+
+  const filteredMenus = searchQuery
+    ? menus.filter((item) =>
+        item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.group.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : menus;
+
+  const groupedResults = filteredMenus.reduce<Record<string, SearchItem[]>>((acc, item) => {
+    if (!acc[item.group]) acc[item.group] = [];
+    acc[item.group].push(item);
+    return acc;
+  }, {});
+
+  const handleSelect = (href: string) => {
+    router.push(href);
+    setSearchQuery("");
+    setSearchOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-[#F5F2EB]">
@@ -51,13 +187,62 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               </div>
 
               {/* Search bar - desktop */}
-              <div className="hidden md:flex items-center gap-2 bg-[#F5F2EB] rounded-xl px-4 py-2 w-80">
-                <Search className="h-4 w-4 text-[#5B6472]" />
-                <input
-                  type="text"
-                  placeholder="Cari menu, siswa, kelas..."
-                  className="bg-transparent text-sm text-[#0B1526] placeholder:text-[#8A93A3] focus:outline-none w-full"
-                />
+              <div ref={searchRef} className="hidden md:block relative">
+                <div className="flex items-center gap-2 bg-[#F5F2EB] rounded-xl px-4 py-2 w-80">
+                  <Search className="h-4 w-4 text-[#5B6472]" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Cari menu, siswa, kelas..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setSearchOpen(true);
+                    }}
+                    onFocus={() => setSearchOpen(true)}
+                    className="bg-transparent text-sm text-[#0B1526] placeholder:text-[#8A93A3] focus:outline-none w-full"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setSearchOpen(false);
+                      }}
+                      className="text-[#8A93A3] hover:text-[#0B1526]"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Dropdown */}
+                {searchOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-[#0B1526]/10 shadow-xl max-h-80 overflow-y-auto z-50">
+                    {Object.keys(groupedResults).length === 0 ? (
+                      <div className="p-4 text-center text-sm text-[#8A93A3]">
+                        Tidak ada hasil untuk "{searchQuery}"
+                      </div>
+                    ) : (
+                      Object.entries(groupedResults).map(([group, items]) => (
+                        <div key={group}>
+                          <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[#8A93A3] bg-[#F5F2EB]/50">
+                            {group}
+                          </div>
+                          {items.map((item) => (
+                            <button
+                              key={item.href}
+                              onClick={() => handleSelect(item.href)}
+                              className="w-full text-left px-4 py-2.5 text-sm text-[#0B1526] hover:bg-[#C9A227]/10 transition-colors flex items-center gap-3"
+                            >
+                              <Search className="h-3.5 w-3.5 text-[#8A93A3]" />
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 

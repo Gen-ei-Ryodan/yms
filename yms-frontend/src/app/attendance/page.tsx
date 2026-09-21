@@ -55,6 +55,18 @@ export default function AttendancePage() {
   const inputClass = "h-11 rounded-xl bg-[#F5F2EB]/50 border-[#0B1526]/10 focus:border-[#C9A227] focus:ring-[#C9A227]/30 text-sm";
   const selectClass = "w-full h-11 px-4 rounded-xl border border-[#0B1526]/10 bg-[#F5F2EB]/50 text-sm focus:border-[#C9A227] focus:ring-2 focus:ring-[#C9A227]/30";
 
+  const filteredAttendances = attendances.filter((a) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      a.student?.full_name?.toLowerCase().includes(q) ||
+      a.class?.course?.name?.toLowerCase().includes(q) ||
+      a.attendance_date?.includes(q) ||
+      a.status?.toLowerCase().includes(q) ||
+      a.method?.toLowerCase().includes(q)
+    );
+  });
+
   const todayCount = attendances.filter(a => a.attendance_date === new Date().toISOString().split("T")[0]).length;
   const presentCount = attendances.filter(a => a.status === "PRESENT").length;
   const lateCount = attendances.filter(a => a.status === "LATE").length;
@@ -143,7 +155,7 @@ export default function AttendancePage() {
               </tr>
             </thead>
             <tbody>
-              {attendances.map((a, i) => (
+              {filteredAttendances.map((a, i) => (
                 <tr key={a.id} className={`border-t border-[#0B1526]/5 hover:bg-[#C9A227]/5 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-[#F5F2EB]/30'}`}>
                   <td className="p-4 text-[#5B6472]">{a.attendance_date}</td>
                   <td className="p-4">
