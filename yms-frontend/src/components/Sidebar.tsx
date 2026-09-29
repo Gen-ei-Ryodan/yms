@@ -8,9 +8,9 @@ import {
   CalendarCheck, Banknote, CreditCard, Receipt, DollarSign, Star, Gift,
   RotateCcw, Ticket, Plane, ArrowLeftRight, BarChart3, Settings, User,
   CalendarDays, FileText, Bell, LogOut, Target, Wallet, Clipboard, History, Calendar,
-  UserMinus, ShoppingCart, AlertCircle, BookOpen as BookIcon
+  UserMinus, ShoppingCart, AlertCircle, ChevronRight, BookOpen as BookIcon
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface SidebarProps {
@@ -180,12 +180,69 @@ const menuData: Record<string, MenuGroup[] | MenuItem[]> = {
   student: studentMenu,
 };
 
+/** Highlight only when the path matches exactly. */
+const isItemActive = (pathname: string, href: string) => pathname === href;
+
+/** Expand a group when the path matches or is nested under one of its items. */
+const isPathActive = (pathname: string, href: string) =>
+  pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+
+function NavItem({ item, active }: { item: MenuItem; active: boolean }) {
+  return (
+    <a
+      href={item.href}
+      className={cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
+        active
+          ? "bg-[#C9A227]/15 text-[#C9A227]"
+          : "text-white/60 hover:bg-white/5 hover:text-white"
+      )}
+    >
+      <item.icon
+        className={cn(
+          "h-[18px] w-[18px] flex-shrink-0",
+          active ? "text-[#C9A227]" : "text-white/40"
+        )}
+      />
+      {item.label}
+    </a>
+  );
+}
+
 export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
   const menu = menuData[role] || studentMenu;
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
   const isGrouped = Array.isArray(menu) && menu.length > 0 && 'items' in menu[0];
+  const groups = isGrouped ? (menu as MenuGroup[]) : [];
+
+  const groupKey = (index: number) => `sidebar-group-${index}`;
+
+  const activeGroupIds = groups
+    .map((group, index) =>
+      group.title && group.items.some((i) => isPathActive(pathname, i.href))
+        ? groupKey(index)
+        : null
+    )
+    .filter((id): id is string => id !== null);
+
+  // `null` = follow the active route; `true`/`false` = the user's own toggle.
+  const [overrides, setOverrides] = useState<Record<string, boolean>>({});
+  const [prevPath, setPrevPath] = useState(pathname);
+
+  // Drop manual toggles on navigation so the section for the current page is
+  // always visible. Adjusting state during render avoids an extra effect pass.
+  if (prevPath !== pathname) {
+    setPrevPath(pathname);
+    setOverrides({});
+  }
+
+  const isGroupOpen = (id: string) =>
+    id in overrides ? overrides[id] : activeGroupIds.includes(id);
+
+  const toggleGroup = (id: string) =>
+    setOverrides((prev) => ({ ...prev, [id]: !isGroupOpen(id) }));
 
   return (
     <>
@@ -210,59 +267,73 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-3 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {isGrouped ? (
-            <ul className="space-y-4">
-              {(menu as MenuGroup[]).map((group, gi) => (
-                <li key={gi}>
-                  {group.title && (
-                    <p className="px-3 mb-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
-                      {group.title}
-                    </p>
-                  )}
-                  <ul className="space-y-0.5">
-                    {group.items.map((item) => {
-                      const isActive = pathname === item.href;
-                      return (
-                        <li key={item.href}>
-                          <a href={item.href} className={cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150",
-                            isActive
-                              ? "bg-[#C9A227]/15 text-[#C9A227]"
-                              : "text-white/60 hover:bg-white/5 hover:text-white"
-                          )}>
-                            <item.icon className={cn(
-                              "h-[18px] w-[18px] flex-shrink-0",
-                              isActive ? "text-[#C9A227]" : "text-white/40"
-                            )} />
-                            {item.label}
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <ul className="space-y-0.5">
-              {(menu as MenuItem[]).map((item) => {
-                const isActive = pathname === item.href;
+            <ul className="space-y-1">
+              {(menu as MenuGroup[]).map((group, gi) => {
+                if (group.items.length === 0) return null;
+
+                const id = groupKey(gi);
+
+                // Group without a title (e.g. Dashboard) stays as a plain item.
+                if (!group.title) {
+                  return (
+                    <li key={id} className="pb-1">
+                      <ul className="space-y-0.5">
+                        {group.items.map((item) => (
+                          <li key={item.href}>
+                            <NavItem item={item} active={isItemActive(pathname, item.href)} />
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  );
+                }
+
+                const open = isGroupOpen(id);
+                const groupActive = group.items.some((i) => isPathActive(pathname, i.href));
+
                 return (
-                  <li key={item.href}>
-                    <a href={item.href} className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
-                      isActive
-                        ? "bg-[#C9A227]/15 text-[#C9A227]"
-                        : "text-white/60 hover:bg-white/5 hover:text-white"
-                    )}>
-                      <item.icon className={cn(
-                        "h-[18px] w-[18px] flex-shrink-0",
-                        isActive ? "text-[#C9A227]" : "text-white/40"
-                      )} />
-                      {item.label}
-                    </a>
+                  <li key={id}>
+                    <button
+                      type="button"
+                      onClick={() => toggleGroup(id)}
+                      aria-expanded={open}
+                      aria-controls={`${id}-items`}
+                      className={cn(
+                        "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors",
+                        groupActive
+                          ? "text-[#C9A227] hover:text-[#C9A227]"
+                          : "text-white/35 hover:bg-white/5 hover:text-white/70"
+                      )}
+                    >
+                      <span className="flex-1 text-left">{group.title}</span>
+                      <ChevronRight
+                        className={cn(
+                          "h-3.5 w-3.5 flex-shrink-0 transition-transform duration-200",
+                          open ? "rotate-90" : "rotate-0"
+                        )}
+                      />
+                    </button>
+
+                    {open && (
+                      <ul id={`${id}-items`} className="mt-0.5 space-y-0.5">
+                        {group.items.map((item) => (
+                          <li key={item.href}>
+                            <NavItem item={item} active={isItemActive(pathname, item.href)} />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </li>
                 );
               })}
+            </ul>
+          ) : (
+            <ul className="space-y-0.5">
+              {(menu as MenuItem[]).map((item) => (
+                <li key={item.href}>
+                  <NavItem item={item} active={isItemActive(pathname, item.href)} />
+                </li>
+              ))}
             </ul>
           )}
         </nav>
